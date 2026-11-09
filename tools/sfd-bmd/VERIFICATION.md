@@ -85,3 +85,29 @@ These are reference materials for independent verification. No third-party solve
 - The OpenSeesPy check currently compares vertical support reactions and global vertical equilibrium for all 11 fixtures, plus fixed-support reaction/end moments where fixture values are defined. The Playwright section-inspector checks validate selected SFD/BMD values in the application. Full diagram arrays and deflection profiles have not yet been compared directly against OpenSeesPy or anaStruct.
 - The current application does not yet support triangular/trapezoidal distributed loads, externally applied concentrated couples, settlement, elastic supports, shear deformation, axial force or geometric/material nonlinearity.
 - The tool remains an educational and preliminary-analysis application, not a substitute for design-code checks or independent professional review.
+
+
+## Elastic deflection module — 9 November 2026
+
+The application now calculates vertical displacement using the same Euler–Bernoulli finite-element model as the force and moment analysis. Users enter Young's modulus, E, in GPa and the second moment of area, I, in m⁴. The default values (200 GPa and 8.0 × 10⁻⁴ m⁴) are illustrative steel-like inputs only; they must be replaced with the actual material and section properties before interpreting a result.
+
+- The element stiffness matrix is multiplied by the constant flexural rigidity EI, with E converted from GPa to kN/m² for the application's kN–m solver.
+- Cubic Hermite interpolation reconstructs vertical displacement between beam nodes.
+- Candidate extrema are found from the derivative of each element's cubic displacement polynomial, rather than relying only on sampled plot points.
+- The inspector reports local vertical displacement; the deflection plot and maximum absolute deflection are displayed in mm, with downward positive.
+- CSV export now includes a `Deflection_mm` column; the deflection plot is included in the PNG diagram export.
+- The model assumes constant E and I along the beam, linear elasticity, small displacement, and Euler–Bernoulli kinematics. It does not include shear deformation, variable sections/materials, support settlement, temperature effects, or geometric/material nonlinearity.
+
+### Closed-form deflection benchmarks
+
+For E = 200 GPa, I = 8.0 × 10⁻⁴ m⁴ and L = 6 m:
+
+| Case | Analytical result | Expected maximum displacement |
+|---|---|---:|
+| Simply supported, P = 20 kN at midspan | PL³/(48EI) | 0.5625 mm downward at midspan |
+| Cantilever, P = 20 kN at free end | PL³/(3EI) | 9.0000 mm downward at free end |
+| Simply supported, q = 10 kN/m over full span | 5qL⁴/(384EI) | 1.0546875 mm downward at midspan |
+
+The Playwright browser tests exercise these results in Chromium, Firefox and WebKit. The OpenSeesPy reference script builds independent elasticBeamColumn models using the same E and I, and compares nodal vertical displacement for all three cases. OpenSees reports upward-positive displacement; the verification runner changes sign when comparing with the application's downward-positive convention.
+
+These are focused elastic beam benchmarks, not a general validation of all deflection cases. Deflection output is intended for preliminary analysis and education; it must be checked against an independent model and applicable serviceability criteria for engineering decisions.
