@@ -68,7 +68,7 @@ async function inspectAt(page, x) {
     el.dispatchEvent(new Event('input', { bubbles: true }));
   }, x);
   const values = page.locator('#inspectValues .metric strong');
-  await expect(values).toHaveCount(4);
+  await expect(values).toHaveCount(5);
   return {
     position: Number.parseFloat(await values.nth(0).innerText()),
     shear: Number.parseFloat(await values.nth(1).innerText()),
