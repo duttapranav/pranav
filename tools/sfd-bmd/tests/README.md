@@ -4,7 +4,7 @@ This directory contains independent numerical and browser verification:
 
 1. `reference_check.py` builds each fixture in anaStruct 1.7.1 and compares support reactions and selected moment results.
 2. `opensees_reference_check.py` independently builds 2D elasticBeamColumn models in OpenSeesPy 3.8.0.0, compares all benchmark vertical support reactions, checks global vertical equilibrium, and verifies three E-I deflection cases against closed-form solutions.
-3. `beam.spec.js` exercises the real application page in Playwright across Chromium, Firefox and WebKit. It includes section-inspector checks for point-load shear jumps and moment continuity, partial-UDL shear slope and peak moment, cantilever hogging moments, continuity at an interior support of a two-span beam, closed-form deflection checks for a simply supported point load, cantilever point load and simply supported UDL, plus triangular, trapezoidal and partial triangular distributed-load reaction/moment checks and SI conversion. It also validates rejection of non-positive E and I inputs. Chromium additionally generates an A4 PDF because Playwright's `page.pdf()` is Chromium-specific. Chromium and Firefox are checked for all four PNG downloads; WebKit is checked for its first user-gesture download because WebKit limits multiple programmatic downloads from one gesture in this test environment.
+3. `beam.spec.js` exercises the real application page in Playwright across Chromium, Firefox and WebKit. It includes section-inspector checks for point-load shear jumps and moment continuity, partial-UDL shear slope and peak moment, cantilever hogging moments, continuity at an interior support of a two-span beam, closed-form deflection checks for a simply supported point load, cantilever point load and simply supported UDL, plus triangular, trapezoidal and partial triangular distributed-load checks, clockwise/anticlockwise concentrated-moment jumps, shear continuity and SI conversion. It also validates rejection of non-positive E and I inputs. Chromium additionally generates an A4 PDF because Playwright's `page.pdf()` is Chromium-specific. Chromium and Firefox are checked for all four PNG downloads; WebKit is checked for its first user-gesture download because WebKit limits multiple programmatic downloads from one gesture in this test environment.
 
 The two reference solvers are installed only in CI; neither is bundled into the browser application.
 
@@ -26,3 +26,6 @@ OpenSeesPy and anaStruct are external CI reference dependencies. Their source co
 
 
 The anaStruct and OpenSeesPy reference scripts subdivide linearly varying load regions and apply midpoint-intensity element loads, allowing independent force and first-moment checks for triangular and trapezoidal loading.
+
+
+Concentrated applied moments are defined as clockwise-positive in the fixtures. The independent reference models apply the corresponding nodal rotational load in anaStruct and OpenSeesPy, and check the resulting support reactions and equilibrium.
