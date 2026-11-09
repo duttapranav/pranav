@@ -43,7 +43,7 @@ A unit-display regression check confirmed that a 10 kN/m UDL displays as 10 N/mm
 
 The solver was subsequently cross-checked directly against anaStruct 1.7.1 using the same 11 reproducible benchmark fixtures in `benchmark-cases.json`. The independent reference job completed successfully for all 11 cases. The comparison checks support reactions and the relevant end-moment / maximum-moment results represented in each fixture. The reference runner constructs the beam in anaStruct from the fixture geometry and load regions; anaStruct is used only in CI and is not bundled into the browser application.
 
-A Chromium browser regression suite also completed successfully: 8 of 8 tests passed. The tests cover a simply supported central point load, SI-unit switching, a fixed-pinned UDL case, duplicate-support validation, CSV and PNG downloads, print-to-PDF rendering, and mobile viewport overflow. The browser tests exercise the actual application page in a headless browser. PNG download, print-to-PDF output, mobile-device layout, and the live GitHub Pages deployment still require separate manual checks.
+A Chromium browser regression suite completed successfully: 8 of 8 tests passed. It covers a simply supported central point load, SI-unit switching, a fixed-pinned UDL case, duplicate-support validation, CSV and PNG downloads, print-to-PDF rendering, and mobile viewport overflow. Subsequent cross-browser testing runs the same suite in Chromium, Firefox and WebKit; the PDF test is intentionally skipped outside Chromium because Playwright's page.pdf() is Chromium-only. In WebKit, the PNG test checks the first download exposed by a single user gesture; Chromium and Firefox verify all three PNG files.
 
 ## Additional cross-checks — 9 November 2026
 
@@ -69,16 +69,17 @@ These are reference materials for independent verification. No third-party solve
 
 ## Automated verification record — 9 November 2026
 
-- **Independent solver:** anaStruct 1.7.1 — 11/11 benchmark fixtures passed.
-- **Browser regression:** Playwright 1.56.1 with Chromium — 5/5 tests passed.
-- **Workflow:** [GitHub Actions run 42584859945](https://github.com/duttapranav/pranav/actions/runs/42584859945).
-- **Test sources:** [anaStruct cross-check script](tests/reference_check.py), [Playwright browser tests](tests/beam.spec.js), and [benchmark fixtures](benchmark-cases.json).
-- The independent anaStruct comparison is a separate numerical implementation, not a certification or a proof of correctness for every possible input.
+- **Independent solver 1:** anaStruct 1.7.1 — 11/11 benchmark fixtures passed, including support reactions and applicable moment results.
+- **Independent solver 2:** OpenSeesPy 3.8.0.0 — 11/11 benchmark fixtures passed for vertical support reactions and global vertical equilibrium; fixed-support reaction/end-moment sign checks are included where benchmark values are defined.
+- **Browser regression:** Playwright 1.56.1 — cross-browser checks in Chromium, Firefox and WebKit. Chromium and Firefox verify all three PNG downloads; WebKit verifies the first PNG download available from a single user gesture. The A4 PDF generation test is Chromium-only.
+- **Workflow:** [GitHub Actions run 42586201840](https://github.com/duttapranav/pranav/actions/runs/42586201840) is the current run for the dual-solver checks; its browser job is being rerun after a WebKit download-order assertion was corrected.
+- **Test sources:** [anaStruct cross-check script](tests/reference_check.py), [OpenSeesPy cross-check script](tests/opensees_reference_check.py), [Playwright browser tests](tests/beam.spec.js), and [benchmark fixtures](benchmark-cases.json).
+- Independent solver comparisons are additional evidence, not certification or proof of correctness for every possible input.
 
 ## Remaining verification scope
 
 - The checks validate selected elastic beam response cases; they do not prove every possible input combination.
 - Live GitHub Pages deployment, additional mobile devices/browsers, and broader export edge cases still require separate manual checks.
-- A direct OpenSees run using the identical fixture inputs has not yet been performed. OpenSees documentation and verification examples were reviewed as additional reference material.
+- The OpenSeesPy check currently compares vertical support reactions and global vertical equilibrium for all 11 fixtures, plus fixed-support reaction/end moments where fixture values are defined. It does not yet compare full element-force diagrams or deflection profiles.
 - The current application does not yet support triangular/trapezoidal distributed loads, externally applied concentrated couples, settlement, elastic supports, shear deformation, axial force or geometric/material nonlinearity.
 - The tool remains an educational and preliminary-analysis application, not a substitute for design-code checks or independent professional review.
