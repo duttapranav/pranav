@@ -10,7 +10,7 @@ async function openApp(page) {
 }
 
 async function clearLoads(page) {
-  for (const selector of ['[data-remove-point]', '[data-remove-udl]']) {
+  for (const selector of ['[data-remove-point]', '[data-remove-moment]', '[data-remove-udl]']) {
     while (await page.locator(selector).count()) {
       await page.locator(selector).first().click();
     }
