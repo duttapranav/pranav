@@ -16,7 +16,7 @@ HERE = Path(__file__).resolve().parent
 FIXTURES = HERE.parent / "benchmark-cases.json"
 REL_TOL = 2.0e-5
 ABS_TOL = 2.0e-5
-SUBDIVISIONS_PER_EVENT_INTERVAL = 8
+SUBDIVISIONS_PER_EVENT_INTERVAL = 40
 
 
 def close(actual: float, expected: float, label: str, case_id: str) -> None:
@@ -86,12 +86,13 @@ def run_case(case: dict) -> list[dict]:
     ops.pattern("Plain", 1, 1)
     for tag, x0, x1 in element_data:
         midpoint = (x0 + x1) / 2.0
-        intensity = sum(
-            float(load["intensity"])
-            for load in case.get("udls", [])
-            if float(load["start"]) - 1e-12 <= midpoint
-            <= float(load["end"]) + 1e-12
-        )
+        intensity = 0.0
+        for load in case.get("udls", []):
+            start, end = float(load["start"]), float(load["end"])
+            if start - 1e-12 <= midpoint <= end + 1e-12:
+                q0 = float(load.get("start_intensity", load.get("intensity", 0.0)))
+                q1 = float(load.get("end_intensity", load.get("intensity", q0)))
+                intensity += q0 + (q1 - q0) * (midpoint - start) / (end - start)
         if intensity:
             # OpenSees local y is upward for this left-to-right horizontal
             # element; the application fixture defines downward loads positive.
