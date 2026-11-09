@@ -274,15 +274,15 @@ test('PNG export produces diagram downloads supported by the browser', async ({ 
   await page.locator('#png').click();
   // WebKit's browser automation environment exposes only the first
   // programmatic download from a single gesture; Chromium and Firefox expose
-  // all three. The complete three-file export is asserted in those engines.
-  const expectedCount = browserName === 'webkit' ? 1 : 3;
+  // all four. The complete four-file export is asserted in those engines.
+  const expectedCount = browserName === 'webkit' ? 1 : 4;
   await expect.poll(() => downloads.length, { timeout: 10000 }).toBe(expectedCount);
   const names = downloads.map(download => download.suggestedFilename()).sort();
   if (browserName === 'webkit') {
     expect(names).toHaveLength(1);
-    expect(['beam.png', 'sfd.png', 'bmd.png']).toContain(names[0]);
+    expect(['beam.png', 'sfd.png', 'bmd.png', 'deflection.png']).toContain(names[0]);
   } else {
-    expect(names).toEqual(['beam.png', 'bmd.png', 'sfd.png']);
+    expect(names).toEqual(['beam.png', 'bmd.png', 'deflection.png', 'sfd.png']);
   }
 });
 
