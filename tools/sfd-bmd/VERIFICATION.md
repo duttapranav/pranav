@@ -41,7 +41,9 @@ An additional combined-load case (10 kN at x = 2 m plus 5 kN/m from x = 1–5 m 
 
 A unit-display regression check confirmed that a 10 kN/m UDL displays as 10 N/mm in the SI unit selection. This check caught and corrected a UDL conversion error in the first implementation.
 
-These checks were run against the JavaScript calculation functions in a controlled test harness, not a full browser end-to-end test. The live GitHub Pages deployment and browser-specific export behaviour still require separate verification.
+The solver was subsequently cross-checked directly against anaStruct 1.7.1 using the same 11 reproducible benchmark fixtures in `benchmark-cases.json`. The independent reference job completed successfully for all 11 cases. The comparison checks support reactions and the relevant end-moment / maximum-moment results represented in each fixture. The reference runner constructs the beam in anaStruct from the fixture geometry and load regions; anaStruct is used only in CI and is not bundled into the browser application.
+
+A Chromium browser regression suite also completed successfully: 5 of 5 tests passed. The tests cover a simply supported central point load, SI-unit switching, a fixed-pinned UDL case, duplicate-support validation, and CSV download. The browser tests exercise the actual application page in a headless browser. PNG download, print-to-PDF output, mobile-device layout, and the live GitHub Pages deployment still require separate manual checks.
 
 ## Additional cross-checks — 9 November 2026
 
@@ -65,9 +67,18 @@ The continuous-span case confirms that the solver can analyse a statically indet
 
 These are reference materials for independent verification. No third-party solver source code has been copied into this application. The anaStruct project is licensed under LGPL-3.0; this project currently uses its own JavaScript implementation.
 
+## Automated verification record — 9 November 2026
+
+- **Independent solver:** anaStruct 1.7.1 — 11/11 benchmark fixtures passed.
+- **Browser regression:** Playwright 1.56.1 with Chromium — 5/5 tests passed.
+- **Workflow:** [GitHub Actions run 42584859945](https://github.com/duttapranav/pranav/actions/runs/42584859945).
+- **Test sources:** [anaStruct cross-check script](tests/reference_check.py), [Playwright browser tests](tests/beam.spec.js), and [benchmark fixtures](benchmark-cases.json).
+- The independent anaStruct comparison is a separate numerical implementation, not a certification or a proof of correctness for every possible input.
+
 ## Remaining verification scope
 
-- The checks above validate selected elastic beam response cases; they do not prove every possible input combination.
-- The browser application has not yet undergone a complete automated browser/device/export test.
-- A direct numerical run against anaStruct or OpenSees with identical input files has not yet been performed; current cross-checks use their published analytical tests/reference examples plus independent closed-form calculations.
+- The checks validate selected elastic beam response cases; they do not prove every possible input combination.
+- PNG download, print-to-PDF output, mobile-device layout, and live GitHub Pages deployment still require separate manual checks.
+- A direct OpenSees run using the identical fixture inputs has not yet been performed. OpenSees documentation and verification examples were reviewed as additional reference material.
 - The current application does not yet support triangular/trapezoidal distributed loads, externally applied concentrated couples, settlement, elastic supports, shear deformation, axial force or geometric/material nonlinearity.
+- The tool remains an educational and preliminary-analysis application, not a substitute for design-code checks or independent professional review.
