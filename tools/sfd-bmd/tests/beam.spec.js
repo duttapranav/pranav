@@ -70,9 +70,9 @@ async function inspectAt(page, x) {
   const values = page.locator('#inspectValues .metric strong');
   await expect(values).toHaveCount(4);
   return {
-    position: await values.nth(0).innerText(),
-    shear: await values.nth(1).innerText(),
-    moment: await values.nth(2).innerText(),
+    position: Number.parseFloat(await values.nth(0).innerText()),
+    shear: Number.parseFloat(await values.nth(1).innerText()),
+    moment: Number.parseFloat(await values.nth(2).innerText()),
   };
 }
 
@@ -99,11 +99,11 @@ test('point-load SFD jump and BMD continuity match section equilibrium', async (
   const left = await inspectAt(page, 2.99);
   const atLoad = await inspectAt(page, 3);
   const right = await inspectAt(page, 3.01);
-  expect(Number(left.shear)).toBeCloseTo(10, 2);
-  expect(Number(right.shear)).toBeCloseTo(-10, 2);
-  expect(Number(atLoad.moment)).toBeCloseTo(30, 2);
-  expect(Number(left.moment)).toBeCloseTo(29.9, 1);
-  expect(Number(right.moment)).toBeCloseTo(29.9, 1);
+  expect(left.shear).toBeCloseTo(10, 2);
+  expect(right.shear).toBeCloseTo(-10, 2);
+  expect(atLoad.moment).toBeCloseTo(30, 2);
+  expect(left.moment).toBeCloseTo(29.9, 1);
+  expect(right.moment).toBeCloseTo(29.9, 1);
 });
 
 test('partial UDL shear slope and maximum sagging moment match analytical values', async ({ page }) => {
@@ -117,11 +117,11 @@ test('partial UDL shear slope and maximum sagging moment match analytical values
   const before = await inspectAt(page, 1);
   const peak = await inspectAt(page, 2.75);
   const after = await inspectAt(page, 4);
-  expect(Number(before.shear)).toBeCloseTo(8.75, 2);
-  expect(Number(peak.shear)).toBeCloseTo(0, 1);
-  expect(Number(peak.moment)).toBeCloseTo(16.40625, 2);
-  expect(Number(after.shear)).toBeCloseTo(-6.25, 2);
-  expect(Number(after.moment)).toBeCloseTo(12.5, 2);
+  expect(before.shear).toBeCloseTo(8.75, 2);
+  expect(peak.shear).toBeCloseTo(0, 1);
+  expect(peak.moment).toBeCloseTo(16.40625, 2);
+  expect(after.shear).toBeCloseTo(-6.25, 2);
+  expect(after.moment).toBeCloseTo(12.5, 2);
   await expect(page.locator('#metrics')).toContainText('16.41');
 });
 
@@ -137,9 +137,9 @@ test('cantilever end point load gives the correct hogging moment diagram', async
   const fixed = await inspectAt(page, 0);
   const middle = await inspectAt(page, 3);
   const free = await inspectAt(page, 6);
-  expect(Number(fixed.moment)).toBeCloseTo(-120, 2);
-  expect(Number(middle.moment)).toBeCloseTo(-60, 2);
-  expect(Number(free.moment)).toBeCloseTo(0, 2);
+  expect(fixed.moment).toBeCloseTo(-120, 2);
+  expect(middle.moment).toBeCloseTo(-60, 2);
+  expect(free.moment).toBeCloseTo(0, 2);
 });
 
 test('two-span continuous beam has a continuous hogging moment at its interior support', async ({ page }) => {
@@ -159,9 +159,9 @@ test('two-span continuous beam has a continuous hogging moment at its interior s
   const left = await inspectAt(page, 4.99);
   const support = await inspectAt(page, 5);
   const right = await inspectAt(page, 5.01);
-  expect(Number(support.moment)).toBeCloseTo(-3.125, 2);
-  expect(Number(left.moment)).toBeCloseTo(-3.12, 1);
-  expect(Number(right.moment)).toBeCloseTo(-3.12, 1);
+  expect(support.moment).toBeCloseTo(-3.125, 2);
+  expect(left.moment).toBeCloseTo(-3.12, 1);
+  expect(right.moment).toBeCloseTo(-3.12, 1);
   expect(Number(left.shear)).toBeCloseTo(-3.115, 1);
   expect(Number(right.shear)).toBeCloseTo(3.115, 1);
 });
