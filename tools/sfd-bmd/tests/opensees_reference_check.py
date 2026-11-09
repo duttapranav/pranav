@@ -32,6 +32,7 @@ def build_mesh(case: dict) -> list[float]:
     events = {0.0, length}
     events.update(float(s["x"]) for s in case["supports"])
     events.update(float(p["x"]) for p in case.get("point_loads", []))
+    events.update(float(m["x"]) for m in case.get("moments", []))
     for load in case.get("udls", []):
         events.add(float(load["start"]))
         events.add(float(load["end"]))
@@ -106,6 +107,16 @@ def run_case(case: dict) -> list[dict]:
             0.0,
         )
 
+    for moment in case.get("moments", []):
+        # OpenSees nodal rotation is counter-clockwise positive; the app
+        # convention is clockwise positive.
+        ops.load(
+            node_at[float(moment["x"])],
+            0.0,
+            0.0,
+            -float(moment["magnitude_clockwise_positive"]),
+        )
+
     ops.constraints("Transformation")
     ops.numberer("RCM")
     ops.system("BandGeneral")
@@ -143,6 +154,33 @@ def run_case(case: dict) -> list[dict]:
     )
     total_reaction = sum(r["vertical"] for r in results)
     close(total_reaction, total_load, "global vertical equilibrium", case["id"])
+
+    # Global moment equilibrium about the left end: upward reactions are
+    # positive counter-clockwise, downward loads and clockwise couples negative.
+    applied_ccw = sum(
+        float(p["magnitude"]) * float(p["x"])
+        for p in case.get("point_loads", [])
+    ) * -1.0
+    applied_ccw += sum(
+        -float(m["magnitude_clockwise_positive"])
+        for m in case.get("moments", [])
+    )
+    applied_ccw += sum(
+        -(
+            float(u.get("start_intensity", u.get("intensity", 0.0)))
+            * (float(u["end"]) - float(u["start"]))
+            * (float(u["start"]) + (float(u["end"]) - float(u["start"])) / 2)
+            + (float(u.get("end_intensity", u.get("intensity", 0.0)))
+               - float(u.get("start_intensity", u.get("intensity", 0.0))))
+            * (float(u["end"]) - float(u["start"])) / 2
+            * (float(u["start"]) + 2 * (float(u["end"]) - float(u["start"])) / 3)
+        )
+        for u in case.get("udls", [])
+    )
+    support_ccw = sum(
+        r["vertical"] * r["x"] - r["moment_ccw"] for r in results
+    )
+    close(support_ccw + applied_ccw, 0.0, "global moment equilibrium", case["id"])
 
     ops.wipe()
     return results
