@@ -178,7 +178,7 @@ def run_case(case: dict) -> list[dict]:
         for u in case.get("udls", [])
     )
     support_ccw = sum(
-        r["vertical"] * r["x"] - r["moment_ccw"] for r in results
+        r["vertical"] * r["x"] + r["moment_ccw"] for r in results
     )
     close(support_ccw + applied_ccw, 0.0, "global moment equilibrium", case["id"])
 
