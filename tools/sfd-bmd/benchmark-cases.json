@@ -441,6 +441,72 @@
         "max_sagging_moment": 16.5695216622,
         "min_hogging_moment": 0
       }
+    },
+    {
+      "id": "SS-APPLIED-CW-MOMENT-001",
+      "name": "Simply supported beam with clockwise concentrated moment",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 6,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [],
+      "moments": [
+        {
+          "magnitude_clockwise_positive": 12,
+          "x": 2
+        }
+      ],
+      "udls": [],
+      "expected": {
+        "reactions": [
+          -2,
+          2
+        ],
+        "max_sagging_moment": 8,
+        "min_hogging_moment": -4,
+        "bending_moment_left_of_couple": -4,
+        "bending_moment_right_of_couple": 8
+      }
+    },
+    {
+      "id": "SS-APPLIED-CCW-MOMENT-001",
+      "name": "Simply supported beam with anticlockwise concentrated moment",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 6,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [],
+      "moments": [
+        {
+          "magnitude_clockwise_positive": -12,
+          "x": 2
+        }
+      ],
+      "udls": [],
+      "expected": {
+        "reactions": [
+          2,
+          -2
+        ],
+        "max_sagging_moment": 4,
+        "min_hogging_moment": -8,
+        "bending_moment_left_of_couple": 4,
+        "bending_moment_right_of_couple": -8
+      }
     }
   ]
 }
