@@ -113,3 +113,42 @@ test('CSV export downloads a results file after analysis', async ({ page }) => {
   const download = await downloadPromise;
   expect(download.suggestedFilename()).toBe('beam-analysis-results.csv');
 });
+
+test('PNG export produces beam, SFD and BMD downloads', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#analyse').click();
+  await expect(page.locator('#error')).toBeHidden();
+  const downloads = [];
+  page.on('download', download => downloads.push(download));
+  await page.locator('#png').click();
+  await expect.poll(() => downloads.length, { timeout: 10000 }).toBe(3);
+  const names = downloads.map(download => download.suggestedFilename()).sort();
+  expect(names).toEqual(['bmd.png', 'beam.png', 'sfd.png']);
+});
+
+test('print action invokes print and Chromium can render an A4 PDF', async ({ page }) => {
+  await page.addInitScript(() => {
+    window.__printInvoked = false;
+    window.print = () => { window.__printInvoked = true; };
+  });
+  await openApp(page);
+  await page.locator('#analyse').click();
+  await page.locator('#pdf').click();
+  await expect.poll(() => page.evaluate(() => window.__printInvoked)).toBe(true);
+  await page.emulateMedia({ media: 'print' });
+  const pdf = await page.pdf({ format: 'A4', printBackground: true });
+  expect(pdf.byteLength).toBeGreaterThan(1000);
+});
+
+test('layout fits a narrow mobile viewport without horizontal page overflow', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openApp(page);
+  await page.locator('#analyse').click();
+  await expect(page.locator('#sfd svg')).toBeVisible();
+  const dimensions = await page.evaluate(() => ({
+    viewport: document.documentElement.clientWidth,
+    content: document.documentElement.scrollWidth,
+  }));
+  expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport + 1);
+});
+
