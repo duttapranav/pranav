@@ -314,6 +314,37 @@
         "interior_support_moment": -3.125,
         "max_sagging_moment": 1.7578125
       }
+    },
+    {
+      "id": "FIX-PIN-UDL-001",
+      "name": "Fixed-pinned beam full-span UDL",
+      "beam_length": 2,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 2,
+          "type": "fixed"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "intensity": 1,
+          "start": 0,
+          "end": 2
+        }
+      ],
+      "expected": {
+        "reactions": [
+          0.75,
+          1.25
+        ],
+        "fixed_support_reaction_moment_clockwise_positive": 0.5,
+        "fixed_end_internal_moment": -0.5
+      }
     }
   ]
 }
