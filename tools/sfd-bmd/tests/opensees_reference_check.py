@@ -160,7 +160,61 @@ def verify(case: dict) -> None:
             f"support {i + 1} vertical reaction",
             case["id"],
         )
-    print(f"PASS {case['id']}: OpenSeesPy support reactions and equilibrium")
+
+    # The fixtures use clockwise-positive support moments / hogging-negative
+    # internal end moments. OpenSees reports counter-clockwise-positive nodal
+    # reaction moments, so convert explicitly at each end.
+    clockwise_positive = [-r["moment_ccw"] for r in actual]
+    if "support_reaction_moments_clockwise_positive" in expected:
+        for i, target in enumerate(expected["support_reaction_moments_clockwise_positive"]):
+            close(clockwise_positive[i], float(target),
+                  f"support {i + 1} reaction moment", case["id"])
+
+    fixed_indices = [
+        i for i, support in enumerate(case["supports"])
+        if support["type"] == "fixed"
+    ]
+    if "fixed_end_moment" in expected:
+        if len(fixed_indices) != 1:
+            raise AssertionError(f"{case['id']}: expected one fixed support")
+        close(clockwise_positive[fixed_indices[0]],
+              float(expected["fixed_end_moment"]),
+              "fixed-end moment", case["id"])
+
+    if "fixed_support_reaction_moment_clockwise_positive" in expected:
+        if len(fixed_indices) != 1:
+            raise AssertionError(f"{case['id']}: expected one fixed support")
+        close(clockwise_positive[fixed_indices[0]],
+              float(expected["fixed_support_reaction_moment_clockwise_positive"]),
+              "fixed-support reaction moment", case["id"])
+
+    if "end_moments" in expected:
+        ordered = sorted(fixed_indices, key=lambda i: float(case["supports"][i]["x"]))
+        internal_end_moments = []
+        for i in ordered:
+            x = float(case["supports"][i]["x"])
+            # For a fixed end at the left, internal-end moment is minus the
+            # nodal reaction moment; at the right it has the same sign.
+            internal_end_moments.append(
+                -actual[i]["moment_ccw"] if x <= 1e-12
+                else actual[i]["moment_ccw"]
+            )
+        if len(internal_end_moments) != len(expected["end_moments"]):
+            raise AssertionError(f"{case['id']}: fixed-end moment count mismatch")
+        for i, target in enumerate(expected["end_moments"]):
+            close(internal_end_moments[i], float(target),
+                  f"fixed end {i + 1} internal moment", case["id"])
+
+    if "fixed_end_internal_moment" in expected:
+        if len(fixed_indices) != 1:
+            raise AssertionError(f"{case['id']}: expected one fixed support")
+        i = fixed_indices[0]
+        x = float(case["supports"][i]["x"])
+        internal = -actual[i]["moment_ccw"] if x <= 1e-12 else actual[i]["moment_ccw"]
+        close(internal, float(expected["fixed_end_internal_moment"]),
+              "fixed-end internal moment", case["id"])
+
+    print(f"PASS {case['id']}: OpenSeesPy reactions, moments and equilibrium")
 
 
 def main() -> None:
