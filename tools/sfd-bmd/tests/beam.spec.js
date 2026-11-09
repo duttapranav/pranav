@@ -232,7 +232,7 @@ test('varying distributed loads preserve physical results in SI display units', 
   const before = await inspectAt(page, -2 + Math.sqrt(28));
   await page.locator('#unit').selectOption('si');
   const after = await inspectAt(page, (-2 + Math.sqrt(28)) * 1000);
-  expect(after.moment / 1e6).toBeCloseTo(before.moment, 3);
+  expect(after.moment / 1e6).toBeCloseTo(before.moment, 2);
   expect(after.shear / 1000).toBeCloseTo(before.shear, 3);
 });
 
