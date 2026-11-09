@@ -215,9 +215,9 @@ test('partial triangular load is integrated from its actual start position', asy
   await clearLoads(page);
   await addVaryingLoad(page, 0, 8, 1, 5);
   await analyse(page);
-  await expect(page.locator('#reactionTable')).toContainText('8.8889');
-  await expect(page.locator('#reactionTable')).toContainText('7.1111');
-  const peak = await inspectAt(page, 3.5);
+  await expect(page.locator('#reactionTable')).toContainText('6.2222');
+  await expect(page.locator('#reactionTable')).toContainText('9.7778');
+  const peak = await inspectAt(page, 1 + Math.sqrt(56) / 3);
   expect(peak.shear).toBeCloseTo(0, 1);
   expect(peak.moment).toBeGreaterThan(0);
 });
