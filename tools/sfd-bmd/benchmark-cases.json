@@ -1,0 +1,319 @@
+{
+  "schema_version": "1.0",
+  "units": "kN,m",
+  "sign_convention": {
+    "applied_vertical_load": "downward positive",
+    "shear": "positive upward on left face",
+    "bending_moment": "sagging positive, hogging negative"
+  },
+  "cases": [
+    {
+      "id": "SS-PP-001",
+      "name": "Simply supported central point load",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 6,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [
+        {
+          "magnitude": 20,
+          "x": 3
+        }
+      ],
+      "udls": [],
+      "expected": {
+        "reactions": [
+          10,
+          10
+        ],
+        "max_sagging_moment": 30,
+        "min_hogging_moment": 0
+      }
+    },
+    {
+      "id": "CANT-PP-001",
+      "name": "Cantilever free-end point load",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "fixed"
+        }
+      ],
+      "point_loads": [
+        {
+          "magnitude": 20,
+          "x": 6
+        }
+      ],
+      "udls": [],
+      "expected": {
+        "vertical_reactions": [
+          20
+        ],
+        "support_reaction_moments_clockwise_positive": [
+          -120
+        ],
+        "max_sagging_moment": 0,
+        "min_hogging_moment": -120
+      }
+    },
+    {
+      "id": "SS-UDL-001",
+      "name": "Simply supported full-span UDL",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 6,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "intensity": 10,
+          "start": 0,
+          "end": 6
+        }
+      ],
+      "expected": {
+        "reactions": [
+          30,
+          30
+        ],
+        "max_sagging_moment": 45,
+        "min_hogging_moment": 0
+      }
+    },
+    {
+      "id": "CANT-UDL-001",
+      "name": "Cantilever full-span UDL",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "fixed"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "intensity": 10,
+          "start": 0,
+          "end": 6
+        }
+      ],
+      "expected": {
+        "vertical_reactions": [
+          60
+        ],
+        "support_reaction_moments_clockwise_positive": [
+          -180
+        ],
+        "max_sagging_moment": 0,
+        "min_hogging_moment": -180
+      }
+    },
+    {
+      "id": "FF-UDL-001",
+      "name": "Fixed-fixed full-span UDL",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "fixed"
+        },
+        {
+          "x": 6,
+          "type": "fixed"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "intensity": 10,
+          "start": 0,
+          "end": 6
+        }
+      ],
+      "expected": {
+        "reactions": [
+          30,
+          30
+        ],
+        "end_moments": [
+          -30,
+          -30
+        ],
+        "midspan_moment": 15
+      }
+    },
+    {
+      "id": "SS-POINT-ECC-001",
+      "name": "Simply supported eccentric point load",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 6,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [
+        {
+          "magnitude": 12,
+          "x": 2
+        }
+      ],
+      "udls": [],
+      "expected": {
+        "reactions": [
+          8,
+          4
+        ],
+        "max_sagging_moment": 16
+      }
+    },
+    {
+      "id": "SS-UDL-PART-001",
+      "name": "Simply supported partial UDL",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 6,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "intensity": 5,
+          "start": 1,
+          "end": 4
+        }
+      ],
+      "expected": {
+        "reactions": [
+          8.75,
+          6.25
+        ],
+        "max_sagging_moment": 16.40625,
+        "location_max_moment": 2.75
+      }
+    },
+    {
+      "id": "OVERHANG-UPLIFT-001",
+      "name": "Left overhang tip load with uplift reaction",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 1,
+          "type": "pin"
+        },
+        {
+          "x": 5,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [
+        {
+          "magnitude": 10,
+          "x": 0
+        }
+      ],
+      "udls": [],
+      "expected": {
+        "reactions": [
+          12.5,
+          -2.5
+        ],
+        "moment_at_left_support": -10
+      }
+    },
+    {
+      "id": "PROP-UDL-001",
+      "name": "Propped cantilever full-span UDL",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "fixed"
+        },
+        {
+          "x": 6,
+          "type": "pin"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "intensity": 10,
+          "start": 0,
+          "end": 6
+        }
+      ],
+      "expected": {
+        "reactions": [
+          37.5,
+          22.5
+        ],
+        "fixed_end_moment": -45,
+        "max_sagging_moment": 25.3125
+      }
+    },
+    {
+      "id": "CONT-2SPAN-UDL-001",
+      "name": "Two equal continuous spans with full UDL",
+      "beam_length": 10,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 5,
+          "type": "roller"
+        },
+        {
+          "x": 10,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "intensity": 1,
+          "start": 0,
+          "end": 10
+        }
+      ],
+      "expected": {
+        "reactions": [
+          1.875,
+          6.25,
+          1.875
+        ],
+        "interior_support_moment": -3.125,
+        "max_sagging_moment": 1.7578125
+      }
+    }
+  ]
+}
