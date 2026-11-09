@@ -1,0 +1,46 @@
+name: Beam calculator verification
+
+on:
+  push:
+    branches: [website-redesign]
+    paths:
+      - 'tools/sfd-bmd/**'
+      - '.github/workflows/beam-validation.yml'
+  pull_request:
+    paths:
+      - 'tools/sfd-bmd/**'
+      - '.github/workflows/beam-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-reference:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install independent reference solver
+        run: python -m pip install --upgrade pip anastruct==1.7.1
+      - name: Cross-check benchmark fixtures with anaStruct
+        run: python tools/sfd-bmd/tests/reference_check.py
+
+  browser:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tools/sfd-bmd/tests
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run browser regression tests
+        run: npm run test:e2e
