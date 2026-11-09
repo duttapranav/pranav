@@ -61,7 +61,7 @@ function renderLoads(){const f=forceFactor(),lf=lengthFactor();$('points').inner
 function updateDefaults(){const L=Lbase();supports=defaults($('beamType').value,L);renderSupports();$('supportHint').textContent='Default layout';}
 $('beamType').addEventListener('change',updateDefaults);
 $('length').addEventListener('change',()=>{if($('beamType').value==='simply'||$('beamType').value==='cantilever'||$('beamType').value==='fixed'||$('beamType').value==='overhang')updateDefaults();});
-$('unit').addEventListener('change',()=>{const oldLength=num('length')*(previousUnit==='si'?.001:1);previousUnit=unit();labels();$('length').value=fmt(oldLength*lengthFactor());renderSupports();renderLoads();});
+$('unit').addEventListener('change',()=>{const oldLength=num('length')*(previousUnit==='si'?.001:1);previousUnit=unit();labels();$('length').value=fmt(oldLength*lengthFactor());renderSupports();renderLoads();if(last)run();});
 $('addSupport').onclick=()=>{supports.push({x:Lbase()/2,type:'roller'});renderSupports()};
 $('addPoint').onclick=()=>{points.push({p:10,x:Lbase()/2});renderLoads()};
 $('addUdl').onclick=()=>{udls.push({q:5,a:0,b:Lbase()});renderLoads()};
