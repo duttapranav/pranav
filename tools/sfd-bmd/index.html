@@ -87,9 +87,12 @@ function analyse(){
  const residual=K.map((r,i)=>r.reduce((sum,v,j)=>sum+v*d[j],0)-F[i]);
  const reactions=supports.map(s=>{const i=idx(s.x);return{x:s.x,type:s.type,vertical:-residual[2*i],moment: s.type==='fixed'?residual[2*i+1]:0};});
  function V(x,side='right'){let v=0;reactions.forEach(r=>{if(r.x<x-tol||(side==='right'&&Math.abs(r.x-x)<tol))v+=r.vertical;});points.forEach(p=>{if(p.x<x-tol||(side==='right'&&Math.abs(p.x-x)<tol))v-=p.p;});udls.forEach(u=>{const len=Math.max(0,Math.min(x,u.b)-u.a);v-=u.q*len;});return v;}
- function M(x){let m=0;reactions.forEach(r=>{if(r.x<x-tol||(x<=tol&&r.x<=tol)||(Math.abs(r.x-x)<tol&&x<L-tol)){m+=r.vertical*(x-r.x)+r.moment;}});points.forEach(p=>{if(p.x<=x+tol)m-=p.p*(x-p.x);});udls.forEach(u=>{const len=Math.max(0,Math.min(x,u.b)-u.a);m-=u.q*len*(x-(u.a+Math.min(x,u.b))/2);});return m;}
- const samples=[];for(let i=0;i<=400;i++){const x=L*i/400;samples.push({x,v:V(x,'right'),m:M(x)});}
- const maxV=Math.max(...samples.map(s=>Math.abs(s.v))),maxM=Math.max(...samples.map(s=>s.m)),minM=Math.min(...samples.map(s=>s.m));
+ function M(x,side='right'){let m=0;reactions.forEach(r=>{if(r.x<x-tol||(side==='right'&&Math.abs(r.x-x)<tol))m+=r.vertical*(x-r.x)+r.moment;});points.forEach(p=>{if(p.x<=x+tol)m-=p.p*(x-p.x);});udls.forEach(u=>{const len=Math.max(0,Math.min(x,u.b)-u.a);m-=u.q*len*(x-(u.a+Math.min(x,u.b))/2);});return m;}
+ const events=[...new Set([0,L,...supports.map(s=>s.x),...points.map(p=>p.x),...udls.flatMap(u=>[u.a,u.b])].map(x=>Math.max(0,Math.min(L,x))))].sort((a,b)=>a-b);
+ const sampleXs=[...new Set([...Array.from({length:401},(_,i)=>L*i/400),...events])].sort((a,b)=>a-b),samples=[];
+ sampleXs.forEach(x=>{const event=events.some(e=>Math.abs(e-x)<tol),isStart=Math.abs(x)<tol,isEnd=Math.abs(x-L)<tol;if(event&& !isStart)samples.push({x,v:V(x,'left'),m:M(x,'left')});samples.push({x,v:V(x,'right'),m:M(x,isEnd?'left':'right')});});
+ const criticalV=[],criticalM=[];events.forEach((x,i)=>{criticalV.push(V(x,'left'),V(x,'right'));criticalM.push(M(x,'left'),M(x,'right'));if(i<events.length-1){const b=events[i+1],va=V(x,'right'),vb=V(b,'left');if(Math.abs(vb-va)>tol){const root=x-va*(b-x)/(vb-va);if(root>x+tol&&root<b-tol)criticalM.push(M(root,'right'));}}});
+ const maxV=Math.max(...criticalV.map(v=>Math.abs(v))),maxM=Math.max(...criticalM),minM=Math.min(...criticalM);
  const totalLoad=points.reduce((a,p)=>a+p.p,0)+udls.reduce((a,u)=>a+u.q*(u.b-u.a),0);
  const totalReaction=reactions.reduce((a,r)=>a+r.vertical,0);
  const forceError=totalReaction-totalLoad;
