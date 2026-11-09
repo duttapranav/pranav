@@ -1,361 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Pranav Dutta</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v5.15.1/js/all.js" crossorigin="anonymous"></script>
-        <!-- Google fonts-->
-        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
-        <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
-    <body id="page-top">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
-            <div class="container">
-                <a class="navbar-brand js-scroll-trigger" href="#page-top">Pranav Dutta</a>
-                <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-                    Menu
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Portfolio</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- Masthead-->
-        <header class="masthead bg-primary text-white text-center">
-            <div class="container d-flex align-items-center flex-column">
-                <!-- Masthead Avatar Image-->
-                <img class="masthead-avatar mb-5" src="assets/img/avataaars.svg" alt="" />
-                <!-- Masthead Heading-->
-                <h1 class="masthead-heading text-uppercase mb-0">Pranav Dutta</h1>
-                <!-- Icon Divider-->
-                <div class="divider-custom divider-light">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                    <div class="divider-custom-line"></div>
-                </div>
-                <!-- Masthead Subheading-->
-                <p class="masthead-subheading font-weight-light mb-0">Civil Engineer from Nepal</p>
-            </div>
-        </header>
-        <!-- Contact Section-->
-        <section class="page-section" id="contact">
-            <div class="container">
-                <!-- Contact Section Heading-->
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Contact Me</h2>
-                <!-- Icon Divider-->
-                <div class="divider-custom">
-                    <div class="divider-custom-line"></div>
-                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                    <div class="divider-custom-line"></div>
-                </div>
-                <!-- Contact Section Form-->
-                <div class="row">
-                    <div class="col-lg-8 mx-auto">
-                        <!-- To configure the contact form email address, go to mail/contact_me.php and update the email address in the PHP file on line 19.-->
-                        <form id="contactForm" name="sentMessage" novalidate="novalidate">
-                            <div class="control-group">
-                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                    <label>Name</label>
-                                    <input class="form-control" id="name" type="text" placeholder="Name" required="required" data-validation-required-message="Please enter your name." />
-                                    <p class="help-block text-danger"></p>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                    <label>Email Address</label>
-                                    <input class="form-control" id="email" type="email" placeholder="Email Address" required="required" data-validation-required-message="Please enter your email address." />
-                                    <p class="help-block text-danger"></p>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                    <label>Phone Number</label>
-                                    <input class="form-control" id="phone" type="tel" placeholder="Phone Number" required="required" data-validation-required-message="Please enter your phone number." />
-                                    <p class="help-block text-danger"></p>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="form-group floating-label-form-group controls mb-0 pb-2">
-                                    <label>Message</label>
-                                    <textarea class="form-control" id="message" rows="5" placeholder="Message" required="required" data-validation-required-message="Please enter a message."></textarea>
-                                    <p class="help-block text-danger"></p>
-                                </div>
-                            </div>
-                            <br />
-                            <div id="success"></div>
-                            <div class="form-group"><button class="btn btn-primary btn-xl" id="sendMessageButton" type="submit">Send</button></div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <!-- Footer-->
-        <footer class="footer text-center">
-            <div class="container">
-                <div class="row">
-                    <!-- Footer Location-->
-                    <div class="col-lg-4 mb-5 mb-lg-0">
-                        <h4 class="text-uppercase mb-4">Location</h4>
-                        <p class="lead mb-0">
-                           Kathmandu, Nepal
-                            <br />
-                        </p>
-                    </div>
-                    <!-- Footer Social Icons-->
-                    <div class="col-lg-4 mb-5 mb-lg-0">
-                        <h4 class="text-uppercase mb-4">Around the Web</h4>
-                        <a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-facebook-f"></i></a>
-<a class="btn btn-outline-light btn-social mx-1" href="#!"><i class="fab fa-fw fa-twitter"></i></a>
-<a class="btn btn-outline-light btn-social mx-1" href="https://www.linkedin.com/in/weirdpranav/"><i class="fab fa-fw fa-linkedin-in"></i></a>
-<a class="btn btn-outline-light btn-social mx-1" href="https://www.researchgate.net/profile/Pranav-Dutta-2"><i class="fab fa-fw fa-researchgate"></i></a>
-
-                    </div>
-                    <!-- Footer About Text-->
-                    <div class="col-lg-4">
-                        <h4 class="text-uppercase mb-4">About Me</h4>
-                        <p class="lead mb-0">
-                            Structural Engineering Enthusiast.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </footer>
-        <!-- Copyright Section-->
-        <div class="copyright py-4 text-center text-white">
-            <div class="container"><small>Copyright © Pranav Dutta 2024</small></div>
-        </div>
-        <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes)-->
-        <div class="scroll-to-top d-lg-none position-fixed">
-            <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top"><i class="fa fa-chevron-up"></i></a>
-        </div>
-        <!-- Portfolio Modals-->
-        <!-- Portfolio Modal 1-->
-        <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" role="dialog" aria-labelledby="portfolioModal1Label" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                    </button>
-                    <div class="modal-body text-center">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal1Label">Log Cabin</h2>
-                                    <!-- Icon Divider-->
-                                    <div class="divider-custom">
-                                        <div class="divider-custom-line"></div>
-                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                        <div class="divider-custom-line"></div>
-                                    </div>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/cabin.png" alt="" />
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
-                                    <button class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fas fa-times fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Portfolio Modal 2-->
-        <div class="portfolio-modal modal fade" id="portfolioModal2" tabindex="-1" role="dialog" aria-labelledby="portfolioModal2Label" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                    </button>
-                    <div class="modal-body text-center">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal2Label">Tasty Cake</h2>
-                                    <!-- Icon Divider-->
-                                    <div class="divider-custom">
-                                        <div class="divider-custom-line"></div>
-                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                        <div class="divider-custom-line"></div>
-                                    </div>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/cake.png" alt="" />
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
-                                    <button class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fas fa-times fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Portfolio Modal 3-->
-        <div class="portfolio-modal modal fade" id="portfolioModal3" tabindex="-1" role="dialog" aria-labelledby="portfolioModal3Label" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                    </button>
-                    <div class="modal-body text-center">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal3Label">Circus Tent</h2>
-                                    <!-- Icon Divider-->
-                                    <div class="divider-custom">
-                                        <div class="divider-custom-line"></div>
-                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                        <div class="divider-custom-line"></div>
-                                    </div>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/circus.png" alt="" />
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
-                                    <button class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fas fa-times fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Portfolio Modal 4-->
-        <div class="portfolio-modal modal fade" id="portfolioModal4" tabindex="-1" role="dialog" aria-labelledby="portfolioModal4Label" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                    </button>
-                    <div class="modal-body text-center">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal4Label">Controller</h2>
-                                    <!-- Icon Divider-->
-                                    <div class="divider-custom">
-                                        <div class="divider-custom-line"></div>
-                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                        <div class="divider-custom-line"></div>
-                                    </div>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/game.png" alt="" />
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
-                                    <button class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fas fa-times fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Portfolio Modal 5-->
-        <div class="portfolio-modal modal fade" id="portfolioModal5" tabindex="-1" role="dialog" aria-labelledby="portfolioModal5Label" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                    </button>
-                    <div class="modal-body text-center">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal5Label">Locked Safe</h2>
-                                    <!-- Icon Divider-->
-                                    <div class="divider-custom">
-                                        <div class="divider-custom-line"></div>
-                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                        <div class="divider-custom-line"></div>
-                                    </div>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/safe.png" alt="" />
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
-                                    <button class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fas fa-times fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Portfolio Modal 6-->
-        <div class="portfolio-modal modal fade" id="portfolioModal6" tabindex="-1" role="dialog" aria-labelledby="portfolioModal6Label" aria-hidden="true">
-            <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="fas fa-times"></i></span>
-                    </button>
-                    <div class="modal-body text-center">
-                        <div class="container">
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8">
-                                    <!-- Portfolio Modal - Title-->
-                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0" id="portfolioModal6Label">Submarine</h2>
-                                    <!-- Icon Divider-->
-                                    <div class="divider-custom">
-                                        <div class="divider-custom-line"></div>
-                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-                                        <div class="divider-custom-line"></div>
-                                    </div>
-                                    <!-- Portfolio Modal - Image-->
-                                    <img class="img-fluid rounded mb-5" src="assets/img/portfolio/submarine.png" alt="" />
-                                    <!-- Portfolio Modal - Text-->
-                                    <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Mollitia neque assumenda ipsam nihil, molestias magnam, recusandae quos quis inventore quisquam velit asperiores, vitae? Reprehenderit soluta, eos quod consequuntur itaque. Nam.</p>
-                                    <button class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fas fa-times fa-fw"></i>
-                                        Close Window
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Third party plugin JS-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-        <!-- Contact form JS-->
-        <script src="assets/mail/jqBootstrapValidation.js"></script>
-        <script src="assets/mail/contact_me.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pranav Dutta | Structural Engineering Researcher</title>
+  <meta name="description" content="Pranav Dutta is a structural engineering researcher working in seismic assessment, computational mechanics, FRP strengthening, experimental materials research and sustainable earth-based construction in Nepal.">
+  <meta name="author" content="Pranav Dutta">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://pranavdutta.com.np/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pranav Dutta | Structural Engineering Researcher">
+  <meta property="og:description" content="Research in seismic assessment, computational mechanics, structural strengthening and sustainable construction.">
+  <meta property="og:url" content="https://pranavdutta.com.np/">
+  <meta name="theme-color" content="#142b43">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{--navy:#142b43;--blue:#315b7d;--ink:#1c2935;--muted:#627181;--line:#e3e9ee;--paper:#fff;--soft:#f4f7f9;--accent:#b77b45;--max:1120px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:84px}body{margin:0;color:var(--ink);background:var(--paper);font:16px/1.7 "DM Sans",sans-serif}a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline} .wrap{width:min(var(--max),calc(100% - 44px));margin:auto}
+    .topbar{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}.nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:24px}.brand{font:800 17px Manrope,sans-serif;letter-spacing:.04em;color:var(--navy)}.navlinks{display:flex;gap:24px;align-items:center}.navlinks a{font-size:13px;font-weight:700;color:#435364}.navlinks a:hover{color:var(--accent);text-decoration:none}.menu{display:none;border:1px solid var(--line);background:white;border-radius:8px;padding:9px 12px;color:var(--navy)}
+    .hero{background:linear-gradient(120deg,#f4f7f9 0%,#fff 70%);padding:94px 0 82px;border-bottom:1px solid var(--line)}.hero-grid{display:grid;grid-template-columns:1.55fr .75fr;gap:72px;align-items:center}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:.17em;font-weight:700;color:var(--accent)}h1,h2,h3{font-family:Manrope,sans-serif;color:var(--navy);line-height:1.2}h1{font-size:clamp(38px,5.5vw,64px);letter-spacing:-.045em;margin:14px 0 10px}.role{font:700 15px Manrope,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--blue)}.lead{font-size:18px;line-height:1.8;color:#455564;max-width:700px;margin:24px 0}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:5px;font-size:13px;font-weight:700;border:1px solid var(--navy)}.btn.primary{background:var(--navy);color:white}.btn.secondary{color:var(--navy);background:transparent}.btn:hover{text-decoration:none;transform:translateY(-1px)}.portrait{width:100%;max-width:300px;aspect-ratio:4/5;margin:auto;border-radius:8px;background:linear-gradient(145deg,#dce5eb,#f3f6f8);display:grid;place-items:center;border:1px solid #d4dfe6;overflow:hidden}.portrait span{font:800 72px Manrope,sans-serif;color:#8da2b2;letter-spacing:-.08em}.portrait-note{text-align:center;color:var(--muted);font-size:11px;margin-top:10px}
+    .quickfacts{border-bottom:1px solid var(--line);background:#fff}.facts{display:grid;grid-template-columns:repeat(3,1fr);padding:24px 0}.fact{padding:0 24px;border-right:1px solid var(--line)}.fact:first-child{padding-left:0}.fact:last-child{border:0}.fact strong{display:block;font:700 14px Manrope;color:var(--navy)}.fact span{font-size:12px;color:var(--muted)}
+    section.content{padding:82px 0;border-bottom:1px solid var(--line)}section.alt{background:var(--soft)}.section-head{max-width:700px;margin-bottom:36px}.kicker{font-size:11px;text-transform:uppercase;letter-spacing:.16em;color:var(--accent);font-weight:700}.section-head h2{font-size:clamp(28px,3vw,38px);margin:8px 0 12px;letter-spacing:-.03em}.section-head p{color:var(--muted);margin:0}.about-grid{display:grid;grid-template-columns:1.3fr .7fr;gap:60px}.about-copy p{margin:0 0 16px;color:#4c5b68}.interest-list{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}.tag{font-size:12px;border:1px solid #d9e2e9;background:white;color:#42586a;padding:7px 11px;border-radius:3px}
+    .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.card{background:#fff;border:1px solid var(--line);padding:25px;border-radius:6px}.card .num{font:700 12px Manrope;color:var(--accent);letter-spacing:.12em}.card h3{font-size:19px;margin:12px 0 10px}.card p{font-size:14px;color:var(--muted);margin:0}.meta{font-size:11px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-top:16px}
+    .pub-list{display:grid;gap:0}.pub{padding:22px 0;border-bottom:1px solid var(--line)}.pub:first-child{padding-top:0}.pub h3{font-size:16px;line-height:1.5;margin:0 0 6px}.pub p{font-size:13px;color:var(--muted);margin:0}.pub a{font-size:12px;font-weight:700;display:inline-block;margin-top:8px}.status{display:inline-block;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:4px 8px;border:1px solid #d9e2e9;color:#52697a;border-radius:3px;margin-bottom:8px}
+    .timeline{border-left:1px solid #cbd7df;margin-left:7px;padding-left:25px;display:grid;gap:28px}.entry{position:relative}.entry:before{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:var(--accent);left:-30px;top:7px}.entry h3{font-size:16px;margin:0 0 4px}.entry .date{font-size:12px;color:var(--blue);font-weight:700}.entry p{font-size:13px;color:var(--muted);margin:8px 0 0}
+    .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.edu{padding:23px;background:#fff;border:1px solid var(--line)}.edu h3{font-size:17px;margin:0 0 8px}.edu p{font-size:13px;color:var(--muted);margin:3px 0}.skills{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}.skill h3{font-size:14px;margin:0 0 7px}.skill p{font-size:13px;color:var(--muted);margin:0}
+    .contact{background:var(--navy);color:#e5edf3;padding:66px 0}.contact h2{color:white;font-size:32px;margin:8px 0}.contact p{color:#c4d0da;max-width:650px}.contact .btn{border-color:white;color:white}.social{display:flex;gap:18px;flex-wrap:wrap;margin-top:22px}.social a{color:white;font-size:13px;font-weight:700;border-bottom:1px solid #8297a8;padding-bottom:3px}.smallprint{font-size:11px;color:#aebdca;margin-top:30px}
+    @media(max-width:800px){.hero-grid,.about-grid{grid-template-columns:1fr;gap:32px}.portrait{max-width:210px;aspect-ratio:1/1;order:-1}.hero{padding:62px 0}.facts{grid-template-columns:1fr;gap:15px}.fact,.fact:first-child{padding:0;border:0}.navlinks{display:none;position:absolute;left:0;right:0;top:76px;background:white;padding:18px 22px 24px;border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start}.navlinks.open{display:flex}.menu{display:block}.cards,.edu-grid,.skills{grid-template-columns:1fr}section.content{padding:60px 0}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  </style>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Person","name":"Pranav Dutta","url":"https://pranavdutta.com.np/","jobTitle":"Structural Engineer — Research","email":"mailto:pranavdutta14@gmail.com","sameAs":["https://www.linkedin.com/in/weirdpranav/","https://www.researchgate.net/profile/Pranav-Dutta-2"]}
+  </script>
+</head>
+<body>
+  <div class="topbar"><div class="wrap nav">
+    <a class="brand" href="#top">PRANAV DUTTA</a>
+    <button class="menu" id="menu" aria-expanded="false" aria-controls="navlinks">Menu</button>
+    <nav class="navlinks" id="navlinks" aria-label="Main navigation">
+      <a href="#about">ABOUT</a><a href="#research">RESEARCH</a><a href="#publications">PUBLICATIONS</a><a href="#experience">EXPERIENCE</a><a href="#education">EDUCATION</a><a href="#contact">CONTACT</a>
+    </nav>
+  </div></div>
+  <header class="hero" id="top"><div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Structural Engineering · Research</div>
+      <h1>Pranav Dutta</h1>
+      <div class="role">Structural Engineering Researcher</div>
+      <p class="lead">I work across seismic assessment of reinforced-concrete structures, computational mechanics, structural strengthening and sustainable construction materials. My approach brings together analytical modelling, experimental investigation and data-driven methods.</p>
+      <div class="actions"><a class="btn primary" href="#research">Explore my research</a><a class="btn secondary" href="#contact">Get in touch</a></div>
+    </div>
+    <div><div class="portrait" role="img" aria-label="Portrait placeholder for Pranav Dutta"><span>PD</span></div><div class="portrait-note">Portrait image to be added</div></div>
+  </div></header>
+  <div class="quickfacts"><div class="wrap facts">
+    <div class="fact"><strong>M.Tech, Structural Engineering</strong><span>SRM Institute of Science and Technology · CGPA 9.76/10</span></div>
+    <div class="fact"><strong>B.Tech Gold Medalist</strong><span>Jain (Deemed-to-be University)</span></div>
+    <div class="fact"><strong>Structural Engineer — Research</strong><span>Pro Eth Pvt. Ltd., Nepal</span></div>
+  </div></div>
+  <main>
+    <section class="content" id="about"><div class="wrap">
+      <div class="section-head"><div class="kicker">01 / Profile</div><h2>About</h2><p>A research-led engineering practice grounded in structural behaviour, material performance and practical context.</p></div>
+      <div class="about-grid"><div class="about-copy">
+        <p>I am a structural engineer from Nepal with postgraduate training in Structural Engineering. My academic and research work has focused on the seismic response of reinforced-concrete buildings, computational assessment, finite-element modelling and fibre-reinforced polymer strengthening.</p>
+        <p>My M.Tech research involved a 54-case parametric study comparing the seismic response of reinforced-concrete buildings under IS 1893:2016 and IS 1893:2025, using ETABS and Python-based regression analysis. I have also worked on ABAQUS modelling of structural components and experimental investigations of GFRP-confined concrete.</p>
+        <p>At Pro Eth Pvt. Ltd., I contribute to research on unstabilised, stabilised and reinforced rammed-earth systems, including material characterisation and experimental planning for sustainable construction in Nepal.</p>
+      </div><div><div class="kicker">Research interests</div><div class="interest-list">
+        <span class="tag">Seismic performance</span><span class="tag">Computational mechanics</span><span class="tag">Finite-element modelling</span><span class="tag">FRP strengthening</span><span class="tag">Experimental materials research</span><span class="tag">Data-driven assessment</span><span class="tag">Earth-based construction</span>
+      </div></div></div>
+    </div></section>
+    <section class="content alt" id="research"><div class="wrap">
+      <div class="section-head"><div class="kicker">02 / Selected work</div><h2>Research & projects</h2><p>Selected research themes and investigations. Project descriptions are intentionally limited to work that can be publicly summarised.</p></div>
+      <div class="cards">
+        <article class="card"><div class="num">01 — CURRENT RESEARCH</div><h3>Stabilised and Reinforced Rammed Earth</h3><p>Research at Pro Eth on unstabilised, stabilised and reinforced rammed-earth systems, including soil and material characterisation, stabilisation strategies and experimental planning for Nepalese construction contexts.</p><div class="meta">Sustainable construction · Material characterisation</div></article>
+        <article class="card"><div class="num">02 — M.TECH RESEARCH</div><h3>Comparative Seismic Assessment of RC Buildings</h3><p>A 54-case parametric study using ETABS to compare building response under IS 1893:2016 and IS 1893:2025, with Python-based dataset preparation and regression analysis.</p><div class="meta">Earthquake engineering · ETABS · Python</div></article>
+        <article class="card"><div class="num">03 — COMPUTATIONAL STUDY</div><h3>Seismic Assessment and CFRP Retrofitting</h3><p>Computational assessment of a vertically expanded reinforced-concrete building using ETABS and ABAQUS, including nonlinear modelling of a representative beam–column assembly and evaluation of CFRP strengthening.</p><div class="meta">Structural assessment · ABAQUS · CFRP</div></article>
+        <article class="card"><div class="num">04 — EXPERIMENTAL RESEARCH</div><h3>GFRP-Confined Concrete</h3><p>Experimental investigation of GFRP-confined concrete specimens, examining compressive and split-tensile behaviour, deformation response and observed failure characteristics.</p><div class="meta">Experimental mechanics · GFRP</div></article>
+        <article class="card"><div class="num">05 — ONGOING PROJECT</div><h3>Image-Based Concrete Crack Assessment</h3><p>Exploration of a CNN-based approach for detecting and classifying visible cracks in concrete structures, with image-based damage characterisation as a potential input to condition assessment.</p><div class="meta">Computer vision · Machine learning</div></article>
+      </div>
+    </div></section>
+    <section class="content" id="publications"><div class="wrap">
+      <div class="section-head"><div class="kicker">03 / Research output</div><h2>Publications & submissions</h2><p>Published work is listed separately from manuscripts submitted for peer review.</p></div>
+      <div class="pub-list">
+        <article class="pub"><span class="status">Published · 2025</span><h3>Predictive Analytics Using Machine Learning for Estimating the Compressive Strength of High-Performance Concrete</h3><p>Dutta, P., Gautam, A., Yadav, S., & Joshi, R. · Lecture Notes in Civil Engineering, Springer Nature, 758, 413–420.</p><a href="https://doi.org/10.1007/978-981-95-2266-8_44" target="_blank" rel="noopener">View DOI ↗</a></article>
+        <article class="pub"><span class="status">Published · 2024</span><h3>Experimental Investigation of the Effectiveness of Glass Fiber Reinforced Polymer (GFRP) Retrofitting on the Mechanical Properties of Concrete Specimen</h3><p>Dutta, P. · Futuristic Trends in Construction Materials & Civil Engineering, Vol. 3, Part 6, Chapter 2, 142–151.</p><a href="https://doi.org/10.58532/V3BICE2P6CH2" target="_blank" rel="noopener">View DOI ↗</a></article>
+        <article class="pub"><span class="status">Published · 2023</span><h3>Artificial Intelligence in the Field of Civil Engineering – A Review</h3><p>Dutta, P., & Aryal, N. · International Journal of Research and Analytical Reviews, 10(1), 456–472.</p><a href="https://doi.org/10.5281/zenodo.12741620" target="_blank" rel="noopener">View DOI ↗</a></article>
+      </div>
+      <div style="margin-top:40px"><div class="kicker">Under peer review</div><h3 style="font-size:19px;margin:8px 0 18px">Journal manuscripts submitted</h3>
+        <article class="pub"><span class="status">Submitted · International Journal of Structural Engineering</span><h3>Comparative Seismic Performance Evaluation of RC Buildings under IS 1893:2016 and 2025 with Machine Learning-Based Correlation</h3><p>Submission ID: IJSTRUCTE-370505</p></article>
+        <article class="pub"><span class="status">Submitted · International Journal of Structural Engineering</span><h3>Seismic Performance Assessment and CFRP Retrofitting of a Vertically Expanded Reinforced Concrete Building</h3><p>Submission ID: IJSTRUCTE-370496</p></article>
+      </div>
+    </div></section>
+    <section class="content alt" id="experience"><div class="wrap">
+      <div class="section-head"><div class="kicker">04 / Career</div><h2>Professional experience</h2><p>Engineering practice and research experience.</p></div>
+      <div class="timeline">
+        <div class="entry"><h3>Structural Engineer — Research</h3><div class="date">Pro Eth Pvt. Ltd., Nepal · July 2026–Present</div><p>Research on rammed-earth systems, material characterisation, stabilisation and reinforcement strategies, experimental planning and technical documentation.</p></div>
+        <div class="entry"><h3>Structural Engineering Intern</h3><div class="date">Interface Engineering Pvt. Ltd., Nepal · November 2025–January 2026</div><p>Supported ETABS modelling and assessment of reinforced-concrete buildings, structural calculations, drawing review and technical documentation.</p></div>
+        <div class="entry"><h3>Assistant Civil Engineer</h3><div class="date">Sigma Engineering Consultancy, Nepal · February–October 2024</div><p>Supported structural and civil engineering design, technical drawings, ETABS-based modelling, design calculations and project documentation.</p></div>
+      </div>
+    </div></section>
+    <section class="content" id="education"><div class="wrap">
+      <div class="section-head"><div class="kicker">05 / Academic background</div><h2>Education & recognition</h2></div>
+      <div class="edu-grid">
+        <div class="edu"><h3>M.Tech in Structural Engineering</h3><p><strong>SRM Institute of Science and Technology</strong></p><p>2024–2026 · CGPA 9.76/10.00</p><p>First Class with Distinction</p></div>
+        <div class="edu"><h3>B.Tech in Civil Engineering</h3><p><strong>Jain (Deemed-to-be University)</strong></p><p>2019–2023 · CGPA 9.04/10.00</p><p>University Gold Medalist and First Rank Holder</p></div>
+      </div>
+      <div class="interest-list" style="margin-top:22px"><span class="tag">Sri Balaji Construction Gold Medal</span><span class="tag">Homi Jahangir Bhabha Scholarship</span><span class="tag">Study in India Scholarship</span><span class="tag">Registered Engineer, Nepal Engineering Council (2024)</span></div>
+    </div></section>
+    <section class="content alt" id="skills"><div class="wrap">
+      <div class="section-head"><div class="kicker">06 / Tools & methods</div><h2>Technical skills</h2></div>
+      <div class="skills">
+        <div class="skill"><h3>Structural analysis</h3><p>ETABS, response-spectrum and modal analysis, parametric assessment, seismic performance evaluation.</p></div>
+        <div class="skill"><h3>Finite-element modelling</h3><p>ABAQUS/Standard, nonlinear finite-element analysis, stress and deformation assessment, retrofit modelling.</p></div>
+        <div class="skill"><h3>Programming & data analysis</h3><p>Python, NumPy, Pandas, scikit-learn, regression analysis, XGBoost, CatBoost.</p></div>
+        <div class="skill"><h3>Materials & experimental research</h3><p>GFRP confinement, CFRP strengthening, concrete mechanical testing, material characterisation.</p></div>
+        <div class="skill"><h3>Computer vision</h3><p>CNN-based crack detection and image-based damage characterisation.</p></div>
+        <div class="skill"><h3>Engineering software</h3><p>STAAD.Pro, AutoCAD, Revit and SketchUp.</p></div>
+      </div>
+    </div></section>
+  </main>
+  <footer class="contact" id="contact"><div class="wrap">
+    <div class="kicker" style="color:#d6a477">07 / Contact</div><h2>Research, collaboration & professional enquiries</h2>
+    <p>For research discussions, academic collaboration or professional enquiries, please get in touch by email or through my professional profiles.</p>
+    <div class="actions"><a class="btn primary" style="background:white;color:#142b43;border-color:white" href="mailto:pranavdutta14@gmail.com">Email Pranav</a></div>
+    <div class="social"><a href="https://www.linkedin.com/in/weirdpranav/" target="_blank" rel="noopener">LinkedIn ↗</a><a href="https://www.researchgate.net/profile/Pranav-Dutta-2" target="_blank" rel="noopener">ResearchGate ↗</a></div>
+    <div class="smallprint">Based in Nepal · Structural Engineering Research</div>
+  </div></footer>
+  <script>
+    const menu=document.getElementById('menu'), nav=document.getElementById('navlinks');
+    menu.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));});
+    nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menu.setAttribute('aria-expanded','false');}));
+  </script>
+</body>
 </html>
