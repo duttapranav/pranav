@@ -79,6 +79,12 @@ def run_case(case: dict) -> list[dict]:
             "elasticBeamColumn", tag, n0, n1,
             area, elastic_modulus, inertia, 1,
         )
+        element_data.append((tag, x0, x1))
+
+    # Element and nodal loads must be created inside an active load pattern.
+    ops.timeSeries("Linear", 1)
+    ops.pattern("Plain", 1, 1)
+    for tag, x0, x1 in element_data:
         midpoint = (x0 + x1) / 2.0
         intensity = sum(
             float(load["intensity"])
@@ -90,10 +96,7 @@ def run_case(case: dict) -> list[dict]:
             # OpenSees local y is upward for this left-to-right horizontal
             # element; the application fixture defines downward loads positive.
             ops.eleLoad("-ele", tag, "-type", "-beamUniform", -intensity)
-        element_data.append((tag, x0, x1))
 
-    ops.timeSeries("Linear", 1)
-    ops.pattern("Plain", 1, 1)
     for load in case.get("point_loads", []):
         ops.load(
             node_at[float(load["x"])],
