@@ -48,6 +48,7 @@ const $=id=>document.getElementById(id);
 let points=[{p:20,x:3}],udls=[{q:10,a:0,b:6}],supports=[],last=null;
 const fmt=(n,d=2)=>Number(n).toFixed(d).replace(/\.?0+$/,'');
 const unit=()=> $('unit').value, Lbase=()=>num('length')*(unit()==='si'?.001:1), forceFactor=()=>unit()==='si'?1000:1, lengthFactor=()=>unit()==='si'?1000:1;
+let previousUnit=unit();
 function num(id){return Number($(id).value)}
 function displayLength(x){return fmt(x*lengthFactor())}
 function displayForce(x){return fmt(x*forceFactor())}
@@ -59,7 +60,7 @@ function renderLoads(){const f=forceFactor(),lf=lengthFactor();$('points').inner
 function updateDefaults(){const L=Lbase();supports=defaults($('beamType').value,L);renderSupports();$('supportHint').textContent='Default layout';}
 $('beamType').addEventListener('change',updateDefaults);
 $('length').addEventListener('change',()=>{if($('beamType').value==='simply'||$('beamType').value==='cantilever'||$('beamType').value==='fixed'||$('beamType').value==='overhang')updateDefaults();});
-$('unit').addEventListener('change',()=>{const oldLength=Lbase();labels();$('length').value=fmt(oldLength*lengthFactor());renderSupports();renderLoads();});
+$('unit').addEventListener('change',()=>{const oldLength=num('length')*(previousUnit==='si'?.001:1);previousUnit=unit();labels();$('length').value=fmt(oldLength*lengthFactor());renderSupports();renderLoads();});
 $('addSupport').onclick=()=>{supports.push({x:Lbase()/2,type:'roller'});renderSupports()};
 $('addPoint').onclick=()=>{points.push({p:10,x:Lbase()/2});renderLoads()};
 $('addUdl').onclick=()=>{udls.push({q:5,a:0,b:Lbase()});renderLoads()};
@@ -96,7 +97,7 @@ function analyse(){
  last={L,type,points:points.map(x=>({...x})),udls:udls.map(x=>({...x})),supports:supports.map(x=>({...x})),reactions,samples,maxV,maxM,minM,totalLoad,forceError,momentLoads,momentReactions,nodes};
  return last;
 }
-function svgBeam(r){const W=900,H=190,left=55,right=850,y=85,scale=(right-left)/r.L,xp=x=>left+x*scale;let s='<svg class="beam-svg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Beam, supports and applied loads"><line x1="'+left+'" y1="'+y+'" x2="'+right+'" y2="'+y+'" stroke="#243d52" stroke-width="5" stroke-linecap="round"/>';r.supports.forEach(a=>{const x=xp(a.x);if(a.type==='fixed')s+='<rect x="'+(x-7)+'" y="'+(y-21)+'" width="7" height="42" fill="#526b7e"/><path d="M '+(x-14)+' '+(y-24)+' l 7 7 M '+(x-14)+' '+(y-12)+' l 7 7 M '+(x-14)+' '+y+' l 7 7 M '+(x-14)+' '+(y+12)+' l 7 7" stroke="#526b7e"/>';else{s+='<path d="M '+(x-12)+' '+(y+18)+' L '+x+' '+(y+2)+' L '+(x+12)+' '+(y+18)+' Z" fill="#eaf0f4" stroke="#526b7e" stroke-width="1.5"/>';if(a.type==='roller')s+='<circle cx="'+(x-6)+'" cy="'+(y+23)+'" r="3" fill="#526b7e"/><circle cx="'+(x+6)+'" cy="'+(y+23)+'" r="3" fill="#526b7e"/>';}s+='<text x="'+x+'" y="'+(y+42)+'" text-anchor="middle" font-size="11" fill="#526170">'+a.type.toUpperCase()+' · '+fmt(a.x,2)+'m</text>';});
+function svgBeam(r){const W=900,H=190,left=55,right=850,y=85,scale=(right-left)/r.L,xp=x=>left+x*scale;let s='<svg class="beam-svg" viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Beam, supports and applied loads"><line x1="'+left+'" y1="'+y+'" x2="'+right+'" y2="'+y+'" stroke="#243d52" stroke-width="5" stroke-linecap="round"/>';r.supports.forEach(a=>{const x=xp(a.x);if(a.type==='fixed')s+='<rect x="'+(x-7)+'" y="'+(y-21)+'" width="7" height="42" fill="#526b7e"/><path d="M '+(x-14)+' '+(y-24)+' l 7 7 M '+(x-14)+' '+(y-12)+' l 7 7 M '+(x-14)+' '+y+' l 7 7 M '+(x-14)+' '+(y+12)+' l 7 7" stroke="#526b7e"/>';else{s+='<path d="M '+(x-12)+' '+(y+18)+' L '+x+' '+(y+2)+' L '+(x+12)+' '+(y+18)+' Z" fill="#eaf0f4" stroke="#526b7e" stroke-width="1.5"/>';if(a.type==='roller')s+='<circle cx="'+(x-6)+'" cy="'+(y+23)+'" r="3" fill="#526b7e"/><circle cx="'+(x+6)+'" cy="'+(y+23)+'" r="3" fill="#526b7e"/>';}s+='<text x="'+x+'" y="'+(y+42)+'" text-anchor="middle" font-size="11" fill="#526170">'+a.type.toUpperCase()+' · '+fmt(a.x*lengthFactor(),2)+(unit()==='si'?'mm':'m')+'</text>';});
 r.points.forEach(p=>{const x=xp(p.x);s+='<path d="M '+x+' 18 V 68 M '+(x-6)+' 59 L '+x+' 68 L '+(x+6)+' 59" stroke="#b54b45" stroke-width="2" fill="none"/><text x="'+x+'" y="13" text-anchor="middle" font-size="11" fill="#b54b45">'+fmt(p.p*forceFactor())+' '+(unit()==='si'?'N':'kN')+'</text>';});
 r.udls.forEach(u=>{const x1=xp(u.a),x2=xp(u.b);s+='<path d="M '+x1+' 27 V 63 M '+x2+' 27 V 63 M '+x1+' 27 H '+x2+'" stroke="#b77b45" stroke-width="1.5" fill="none"/>';for(let x=x1+5;x<x2;x+=Math.max(10,(x2-x1)/20))s+='<path d="M '+x+' 31 V 62 l -4 -6 M '+x+' 62 l 4 -6" stroke="#b77b45" fill="none"/>';s+='<text x="'+((x1+x2)/2)+'" y="20" text-anchor="middle" font-size="11" fill="#9b6639">'+fmt(u.q*forceFactor())+' '+(unit()==='si'?'N/mm':'kN/m')+'</text>';});
 s+='<text x="'+left+'" y="175" font-size="10" fill="#758391">0</text><text x="'+right+'" y="175" text-anchor="end" font-size="10" fill="#758391">'+fmt(r.L)+' m</text></svg>';return s;}
