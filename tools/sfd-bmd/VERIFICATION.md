@@ -69,10 +69,10 @@ These are reference materials for independent verification. No third-party solve
 
 ## Automated verification record — 9 November 2026
 
-- **Independent solver 1:** anaStruct 1.7.1 — 11/11 benchmark fixtures passed, including support reactions and applicable moment results.
-- **Independent solver 2:** OpenSeesPy 3.8.0.0 — 11/11 benchmark fixtures passed for vertical support reactions and global vertical equilibrium; fixed-support reaction/end-moment sign checks are included where benchmark values are defined.
+- **Independent solver 1:** anaStruct 1.7.1 — 14/14 benchmark fixtures passed, including the new triangular, trapezoidal and partial triangular load cases, support reactions and applicable moment results.
+- **Independent solver 2:** OpenSeesPy 3.8.0.0 — 14/14 benchmark fixtures passed for vertical support reactions and global vertical equilibrium; fixed-support reaction/end-moment sign checks are included where benchmark values are defined.
 - **Browser regression:** Playwright 1.56.1 — 46 passed, 2 intentionally skipped, across 48 executions in Chromium, Firefox and WebKit. The skipped tests are the PDF-generation check in Firefox and WebKit because Playwright's `page.pdf()` is Chromium-only.
-- **Diagram-level checks:** point-load shear jump and bending-moment continuity; partial-UDL shear slope and peak moment; cantilever hogging moment profile; and moment continuity plus shear jump at an interior support in a two-span continuous beam. These tests read the application's section inspector at selected beam positions. Three closed-form deflection cases and invalid E/I input handling also pass in all three browsers.
+- **Diagram-level checks:** point-load shear jump and bending-moment continuity; partial-UDL shear slope and peak moment; cantilever hogging moment profile; moment continuity plus shear jump at an interior support in a two-span continuous beam; and closed-form triangular, trapezoidal and partial triangular load checks. These tests read the application's section inspector at selected beam positions. Three closed-form deflection cases and invalid E/I input handling also pass in all three browsers.
 - **Exports and layout:** CSV download in all three browsers; all four PNG downloads in Chromium and Firefox; first diagram PNG download in WebKit; A4 PDF rendering in Chromium; narrow mobile viewport overflow check in all three browsers.
 - **Workflow:** [GitHub Actions run 42588145386](https://github.com/duttapranav/pranav/actions/runs/42588145386) — independent anaStruct/OpenSeesPy checks and cross-browser regression completed successfully.
 - **Test sources:** [anaStruct cross-check script](tests/reference_check.py), [OpenSeesPy cross-check script](tests/opensees_reference_check.py), [Playwright browser tests](tests/beam.spec.js), and [benchmark fixtures](benchmark-cases.json).
@@ -82,7 +82,7 @@ These are reference materials for independent verification. No third-party solve
 
 - The checks validate selected elastic beam response cases; they do not prove every possible input combination.
 - Live GitHub Pages deployment, additional mobile devices/browsers, and broader export edge cases still require separate manual checks.
-- The OpenSeesPy check compares vertical support reactions and global vertical equilibrium for all 11 fixtures, plus fixed-support reaction/end moments where fixture values are defined. It also independently compares three selected E-I deflections (simply supported point load, cantilever tip load and simply supported UDL) against closed-form values. Full diagram arrays and continuous deflection profiles have not yet been compared directly against OpenSeesPy or anaStruct.
+- The OpenSeesPy check compares vertical support reactions and global vertical equilibrium for all 14 fixtures, plus fixed-support reaction/end moments where fixture values are defined. It also independently compares three selected E-I deflections (simply supported point load, cantilever tip load and simply supported UDL) against closed-form values. Full diagram arrays and continuous deflection profiles have not yet been compared directly against OpenSeesPy or anaStruct.
 - The current application does not yet support triangular/trapezoidal distributed loads, externally applied concentrated couples, settlement, elastic supports, shear deformation, axial force or geometric/material nonlinearity.
 - The tool remains an educational and preliminary-analysis application, not a substitute for design-code checks or independent professional review.
 
