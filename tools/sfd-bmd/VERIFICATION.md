@@ -27,7 +27,7 @@ This file records independent closed-form benchmark cases used to check the beam
 
 ## Scope and limitations
 
-This benchmark set is a regression check, not third-party certification. The tool currently analyses vertical-plane bending of prismatic beams with linear-elastic Euler–Bernoulli behaviour. It does not replace a design-code check or independent engineering review. It does not currently model shear deformation, plasticity, geometric nonlinearity, settlement, temperature effects, axial-force interaction, or arbitrary applied point couples.
+This benchmark set is a regression check, not third-party certification. The tool currently analyses vertical-plane bending of prismatic beams with linear-elastic Euler–Bernoulli behaviour. It does not replace a design-code check or independent engineering review. It does not currently model shear deformation, plasticity, geometric nonlinearity, settlement, temperature effects, axial-force interaction, or arbitrary applied point couples. Distributed loads may be uniform or vary linearly between their entered start and end intensities; curved/nonlinear load profiles are not supported.
 
 ## Unit equivalence
 
@@ -111,3 +111,25 @@ For E = 200 GPa, I = 8.0 × 10⁻⁴ m⁴ and L = 6 m:
 The Playwright browser tests exercise these results in Chromium, Firefox and WebKit. The OpenSeesPy reference script builds independent elasticBeamColumn models using the same E and I, and compares nodal vertical displacement for all three cases. OpenSees reports upward-positive displacement; the verification runner changes sign when comparing with the application's downward-positive convention.
 
 These are focused elastic beam benchmarks, not a general validation of all deflection cases. Deflection output is intended for preliminary analysis and education; it must be checked against an independent model and applicable serviceability criteria for engineering decisions.
+
+
+## Linearly varying distributed-load verification — 9 November 2026
+
+The distributed-load input now accepts an intensity at the start and end of each load region. Equal values represent a UDL; one zero end represents a triangular load; two nonzero unequal values represent a trapezoidal load. Intensities vary linearly between the two positions, and multiple load regions may overlap.
+
+The finite-element solver uses the consistent nodal load vector for a linearly varying load with endpoint intensities q₀ and q₁ over element length ℓ:
+
+- Vertical nodal forces: ℓ(7q₀ + 3q₁)/20 and ℓ(3q₀ + 7q₁)/20.
+- Nodal moments: ℓ²(3q₀ + 2q₁)/60 and −ℓ²(2q₀ + 3q₁)/60.
+
+The shear-force function integrates the linear load intensity exactly, producing a quadratic shear function. Bending-moment extrema are therefore evaluated using the quadratic roots of V(x) = 0, rather than a linear interpolation between shear samples. Resultant load and first moment are also integrated analytically for equilibrium reporting.
+
+### New closed-form benchmarks
+
+| Case | Load | Reactions (left, right) | Maximum sagging moment |
+|---|---|---:|---:|
+| Simply supported, 6 m, triangular | 0 to 10 kN/m | 10.000, 20.000 kN | 23.0940 kN·m |
+| Simply supported, 6 m, trapezoidal | 2 to 8 kN/m | 12.000, 18.000 kN | 22.7207 kN·m |
+| Simply supported, 6 m, partial triangular | 0 to 8 kN/m over x = 1–5 m | 6.2222, 9.7778 kN | 16.5695 kN·m |
+
+Browser tests also verify the varying-load input fields, moment-extremum locations, and preservation of physical results when switching to SI display units. The independent anaStruct and OpenSeesPy reference runners subdivide each varying-load region and apply midpoint-intensity element loads; midpoint integration preserves the total force and first moment of a linearly varying load. This is a mesh-based independent cross-check, while the browser solver uses exact consistent element loading.
