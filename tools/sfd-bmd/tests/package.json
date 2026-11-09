@@ -1,0 +1,11 @@
+{
+  "name": "beam-analysis-validation",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}
