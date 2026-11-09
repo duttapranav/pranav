@@ -73,6 +73,7 @@ async function inspectAt(page, x) {
     position: Number.parseFloat(await values.nth(0).innerText()),
     shear: Number.parseFloat(await values.nth(1).innerText()),
     moment: Number.parseFloat(await values.nth(2).innerText()),
+    deflection: Number.parseFloat(await values.nth(4).innerText()),
   };
 }
 
@@ -164,6 +165,61 @@ test('two-span continuous beam has a continuous hogging moment at its interior s
   expect(right.moment).toBeCloseTo(-3.12, 1);
   expect(Number(left.shear)).toBeCloseTo(-3.115, 1);
   expect(Number(right.shear)).toBeCloseTo(3.115, 1);
+});
+
+
+test('simply supported central point-load deflection matches Euler-Bernoulli solution', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addPoint(page, 20, 3);
+  await page.locator('#elasticModulus').fill('200');
+  await page.locator('#secondMoment').fill('0.0008');
+  await analyse(page);
+  await expect(page.locator('#deflection svg')).toBeVisible();
+  await expect(page.locator('#metrics')).toContainText('0.5625');
+  const mid = await inspectAt(page, 3);
+  expect(mid.deflection).toBeCloseTo(0.5625, 3);
+});
+
+test('cantilever free-end deflection matches closed-form point-load solution', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('cantilever');
+  await page.locator('#length').fill('6');
+  await page.locator('#length').press('Tab');
+  await clearLoads(page);
+  await addPoint(page, 20, 6);
+  await page.locator('#elasticModulus').fill('200');
+  await page.locator('#secondMoment').fill('0.0008');
+  await analyse(page);
+  const tip = await inspectAt(page, 6);
+  expect(tip.deflection).toBeCloseTo(4.5, 3);
+  await expect(page.locator('#metrics')).toContainText('4.5');
+});
+
+test('simply supported full-span UDL deflection matches closed-form solution', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addUdl(page, 10, 0, 6);
+  await page.locator('#elasticModulus').fill('200');
+  await page.locator('#secondMoment').fill('0.0008');
+  await analyse(page);
+  const mid = await inspectAt(page, 3);
+  expect(mid.deflection).toBeCloseTo(1.0546875, 3);
+});
+
+test('rejects zero or negative flexural stiffness inputs', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#elasticModulus').fill('0');
+  await page.locator('#analyse').click();
+  await expect(page.locator('#error')).toContainText('positive');
+  await page.locator('#elasticModulus').fill('200');
+  await page.locator('#secondMoment').fill('-0.1');
+  await page.locator('#analyse').click();
+  await expect(page.locator('#error')).toContainText('positive');
 });
 
 test('SI switch preserves load magnitudes and converts positions and point loads', async ({ page }) => {
