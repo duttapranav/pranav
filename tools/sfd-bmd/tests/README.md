@@ -4,7 +4,7 @@ This directory contains independent numerical and browser verification:
 
 1. `reference_check.py` builds each fixture in anaStruct 1.7.1 and compares support reactions and selected moment results.
 2. `opensees_reference_check.py` independently builds 2D elasticBeamColumn models in OpenSeesPy 3.8.0.0, compares all benchmark vertical support reactions, and checks global vertical equilibrium.
-3. `beam.spec.js` exercises the real application page in Playwright across Chromium, Firefox and WebKit. Chromium additionally generates an A4 PDF because Playwright's `page.pdf()` is Chromium-specific.
+3. `beam.spec.js` exercises the real application page in Playwright across Chromium, Firefox and WebKit. Chromium additionally generates an A4 PDF because Playwright's `page.pdf()` is Chromium-specific. Chromium and Firefox are checked for all three PNG downloads; WebKit is checked for its first user-gesture download because WebKit limits multiple programmatic downloads from one gesture in this test environment.
 
 The two reference solvers are installed only in CI; neither is bundled into the browser application.
 
