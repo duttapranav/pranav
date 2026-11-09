@@ -16,7 +16,7 @@ HERE = Path(__file__).resolve().parent
 FIXTURES = HERE.parent / "benchmark-cases.json"
 REL_TOL = 2.0e-5
 ABS_TOL = 2.0e-5
-SUBDIVISIONS_PER_EVENT_INTERVAL = 40
+SUBDIVISIONS_PER_EVENT_INTERVAL = 200
 
 
 def close(actual: float, expected: float, label: str, case_id: str) -> None:
