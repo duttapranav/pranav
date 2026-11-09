@@ -217,11 +217,76 @@ def verify(case: dict) -> None:
     print(f"PASS {case['id']}: OpenSeesPy reactions, moments and equilibrium")
 
 
+
+def verify_deflection_benchmarks() -> None:
+    """Compare E-I beam displacements with independent OpenSeesPy models.
+
+    Units: kN, m, kN/m², m⁴. OpenSees vertical displacement is upward
+    positive, while the browser tool reports downward-positive deflection.
+    """
+    E = 200.0e6  # 200 GPa expressed as kN/m²
+    I = 8.0e-4   # m⁴
+    A = 1.0      # m²; axial stiffness does not affect these bending cases
+    L = 6.0
+    ndiv = 24
+    xs = [L * i / ndiv for i in range(ndiv + 1)]
+    node_at = {round(x, 10): i + 1 for i, x in enumerate(xs)}
+
+    cases = [
+        ("SS-DEF-POINT", "simply", "point", 0.5625, 3.0),
+        ("CANT-DEF-POINT", "cantilever", "point", 4.5, 6.0),
+        ("SS-DEF-UDL", "simply", "udl", 1.0546875, 3.0),
+    ]
+    for case_id, kind, load_kind, expected_mm, inspect_x in cases:
+        ops.wipe()
+        ops.model("basic", "-ndm", 2, "-ndf", 3)
+        ops.geomTransf("Linear", 1)
+        for tag, x in enumerate(xs, start=1):
+            ops.node(tag, x, 0.0)
+        for tag, (x0, x1) in enumerate(zip(xs, xs[1:]), start=1):
+            ops.element("elasticBeamColumn", tag, node_at[round(x0, 10)],
+                        node_at[round(x1, 10)], A, E, I, 1)
+
+        if kind == "simply":
+            ops.fix(node_at[0.0], 1, 1, 0)
+            ops.fix(node_at[round(L, 10)], 0, 1, 0)
+        else:
+            ops.fix(node_at[0.0], 1, 1, 1)
+
+        ops.timeSeries("Linear", 1)
+        ops.pattern("Plain", 1, 1)
+        if load_kind == "point":
+            ops.load(node_at[round(inspect_x, 10)], 0.0, -20.0, 0.0)
+        else:
+            for tag in range(1, ndiv + 1):
+                ops.eleLoad("-ele", tag, "-type", "-beamUniform", -10.0)
+
+        ops.constraints("Transformation")
+        ops.numberer("RCM")
+        ops.system("BandGeneral")
+        ops.test("NormDispIncr", 1.0e-12, 20, 0)
+        ops.algorithm("Linear")
+        ops.integrator("LoadControl", 1.0)
+        ops.analysis("Static")
+        code = ops.analyze(1)
+        if code != 0:
+            raise RuntimeError(f"{case_id}: OpenSeesPy analysis failed: {code}")
+
+        node = node_at[round(inspect_x, 10)]
+        # OpenSees uses upward-positive vertical displacement.
+        downward_mm = -float(ops.nodeDisp(node, 2)) * 1000.0
+        close(downward_mm, expected_mm, "maximum/section deflection (mm)", case_id)
+        print(f"PASS {case_id}: OpenSeesPy deflection = {downward_mm:.8f} mm")
+    ops.wipe()
+
+
 def main() -> None:
     cases = json.loads(FIXTURES.read_text(encoding="utf-8"))["cases"]
     for case in cases:
         verify(case)
     print(f"All {len(cases)} benchmark cases cross-checked with OpenSeesPy.")
+    verify_deflection_benchmarks()
+    print("All 3 E-I deflection benchmarks cross-checked with OpenSeesPy.")
 
 
 if __name__ == "__main__":
