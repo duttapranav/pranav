@@ -86,7 +86,7 @@ function analyse(){
  const residual=K.map((r,i)=>r.reduce((sum,v,j)=>sum+v*d[j],0)-F[i]);
  const reactions=supports.map(s=>{const i=idx(s.x);return{x:s.x,type:s.type,vertical:-residual[2*i],moment: s.type==='fixed'?residual[2*i+1]:0};});
  function V(x,side='right'){let v=0;reactions.forEach(r=>{if(r.x<x-tol||(side==='right'&&Math.abs(r.x-x)<tol))v+=r.vertical;});points.forEach(p=>{if(p.x<x-tol||(side==='right'&&Math.abs(p.x-x)<tol))v-=p.p;});udls.forEach(u=>{const len=Math.max(0,Math.min(x,u.b)-u.a);v-=u.q*len;});return v;}
- function M(x){let m=0;reactions.forEach(r=>{if(r.x<=x+tol){m+=r.vertical*(x-r.x)+r.moment;}});points.forEach(p=>{if(p.x<=x+tol)m-=p.p*(x-p.x);});udls.forEach(u=>{const len=Math.max(0,Math.min(x,u.b)-u.a);m-=u.q*len*(x-(u.a+Math.min(x,u.b))/2);});return m;}
+ function M(x){let m=0;reactions.forEach(r=>{if(r.x<x-tol||(x<=tol&&r.x<=tol)||(Math.abs(r.x-x)<tol&&x<L-tol)){m+=r.vertical*(x-r.x)+r.moment;}});points.forEach(p=>{if(p.x<=x+tol)m-=p.p*(x-p.x);});udls.forEach(u=>{const len=Math.max(0,Math.min(x,u.b)-u.a);m-=u.q*len*(x-(u.a+Math.min(x,u.b))/2);});return m;}
  const samples=[];for(let i=0;i<=400;i++){const x=L*i/400;samples.push({x,v:V(x,'right'),m:M(x)});}
  const maxV=Math.max(...samples.map(s=>Math.abs(s.v))),maxM=Math.max(...samples.map(s=>s.m)),minM=Math.min(...samples.map(s=>s.m));
  const totalLoad=points.reduce((a,p)=>a+p.p,0)+udls.reduce((a,u)=>a+u.q*(u.b-u.a),0);
