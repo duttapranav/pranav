@@ -42,8 +42,8 @@ def run_case(case: dict) -> dict:
     # integration preserves each linear region's total force and first moment.
     xs_set = set(anchors)
     for left, right in zip(anchors, anchors[1:]):
-        for j in range(1, 41):
-            xs_set.add(left + (right - left) * j / 40)
+        for j in range(1, 101):
+            xs_set.add(left + (right - left) * j / 100)
     xs = sorted(xs_set)
 
     # Large EA/EI values keep this comparison focused on beam response.
