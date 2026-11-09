@@ -36,6 +36,7 @@ def run_case(case: dict) -> dict:
     for load in udls:
         coordinates.add(float(load["start"]))
         coordinates.add(float(load["end"]))
+    coordinates.update(float(m["x"]) for m in case.get("moments", []))
     anchors = sorted(coordinates)
     # Subdivide each load/support interval so linearly varying loads can be
     # represented by midpoint-intensity uniform element loads. Midpoint
@@ -73,6 +74,12 @@ def run_case(case: dict) -> dict:
         model.point_load(
             node_id=node_for_x[float(load["x"])],
             Fy=float(load["magnitude"]),
+        )
+
+    for moment in case.get("moments", []):
+        model.moment_load(
+            node_id=node_for_x[float(moment["x"])],
+            Ty=float(moment["magnitude_clockwise_positive"]),
         )
 
     for load in udls:
