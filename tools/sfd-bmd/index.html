@@ -72,6 +72,10 @@ document.addEventListener('change',e=>{const d=e.target.dataset;if(d.k==='type'&
 document.addEventListener('click',e=>{const d=e.target.dataset;if(d.removePoint!==undefined){points.splice(+d.removePoint,1);renderLoads()}if(d.removeUdl!==undefined){udls.splice(+d.removeUdl,1);renderLoads()}if(d.removeSupport!==undefined){supports.splice(+d.removeSupport,1);renderSupports()}});
 function solve(A,b){const n=b.length,M=A.map((r,i)=>r.slice().concat(b[i]));for(let k=0;k<n;k++){let p=k;for(let i=k+1;i<n;i++)if(Math.abs(M[i][k])>Math.abs(M[p][k]))p=i;if(Math.abs(M[p][k])<1e-11)throw Error('The support arrangement is unstable or insufficient to restrain the beam. Check support positions and types.');[M[k],M[p]]=[M[p],M[k]];const v=M[k][k];for(let j=k;j<=n;j++)M[k][j]/=v;for(let i=0;i<n;i++)if(i!==k){const c=M[i][k];for(let j=k;j<=n;j++)M[i][j]-=c*M[k][j];}}return M.map(r=>r[n]);}
 function analyse(){
+ // Read support controls at solve time as the authoritative UI state. This
+ // prevents stale support types/positions if a browser delays a change event.
+ const supportRows=[...$('supports').querySelectorAll('.support-row')];
+ supports=supportRows.map(row=>{const raw=row.querySelector('[data-k="x"]').value.trim();return{x:raw===''?NaN:Number(raw)/lengthFactor(),type:row.querySelector('[data-k="type"]').value};});
  const L=Lbase(),type=$('beamType').value;if(!(L>0&&Number.isFinite(L)))throw Error('Enter a beam length greater than zero.');
  if(!supports.length)throw Error('At least one support is required.');
  const tol=1e-8;
