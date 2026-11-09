@@ -46,7 +46,7 @@ def run_case(case: dict) -> dict:
         model.add_element(location=[[x0, 0.0], [x1, 0.0]])
         element_for_interval[(x0, x1)] = len(element_for_interval) + 1
 
-    node_for_x = {float(node.vertex.x): node.id for node in model.node_map.values()}
+    node_for_x = {x: model.find_node_id(vertex=[x, 0.0]) for x in xs}
 
     for support in supports:
         node_id = node_for_x[float(support["x"])]
@@ -136,8 +136,14 @@ def verify(case: dict) -> None:
         # opposite support-reaction moment at the restrained nodes.
         fixed = [r for r in actual["reactions"] if r["type"] == "fixed"]
         for i, target in enumerate(expected["end_moments"]):
-            close(fixed[i]["browser_moment_sign"], target,
-                  f"fixed end {i + 1} moment (browser sign convention)", case_id)
+            # Internal end-moment sign reverses between the left and right
+            # element ends, while anaStruct reports nodal support actions.
+            internal_end_moment = (
+                fixed[i]["browser_moment_sign"] if i == 0
+                else -fixed[i]["browser_moment_sign"]
+            )
+            close(internal_end_moment, target,
+                  f"fixed end {i + 1} internal moment", case_id)
 
     if "interior_support_moment" in expected:
         x_mid = length = float(case["beam_length"]) / 2.0
