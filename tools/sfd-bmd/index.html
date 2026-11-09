@@ -72,7 +72,10 @@ function solve(A,b){const n=b.length,M=A.map((r,i)=>r.slice().concat(b[i]));for(
 function analyse(){
  const L=Lbase(),type=$('beamType').value;if(!(L>0&&Number.isFinite(L)))throw Error('Enter a beam length greater than zero.');
  if(!supports.length)throw Error('At least one support is required.');
- const tol=1e-8;supports.forEach(s=>{if(!Number.isFinite(s.x)||s.x<0||s.x>L)throw Error('Every support must lie between 0 and the beam end.');});
+ const tol=1e-8;
+ if(supports.length>20||points.length>50||udls.length>50)throw Error('For reliable browser performance, use no more than 20 supports, 50 point loads and 50 distributed-load regions in one model.');
+ const seenSupports=[];
+ supports.forEach(s=>{if(!Number.isFinite(s.x)||s.x<0||s.x>L)throw Error('Every support must lie between 0 and the beam end.');if(!['pin','roller','fixed'].includes(s.type))throw Error('Choose pin, roller or fixed for every support.');if(seenSupports.some(x=>Math.abs(x-s.x)<tol))throw Error('Two supports cannot occupy the same position. Use one support type at each location.');seenSupports.push(s.x);});
  points.forEach(p=>{if(!Number.isFinite(p.p)||!Number.isFinite(p.x)||p.x<0||p.x>L)throw Error('Check point load magnitudes and positions.');});
  udls.forEach(u=>{if(!Number.isFinite(u.q)||!Number.isFinite(u.a)||!Number.isFinite(u.b)||u.a<0||u.b>L||u.b<=u.a)throw Error('Each UDL must have a positive length and lie within the beam.');});
  if(supports.length<1)throw Error('Add at least one support.');
