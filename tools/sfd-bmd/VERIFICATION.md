@@ -42,3 +42,32 @@ An additional combined-load case (10 kN at x = 2 m plus 5 kN/m from x = 1–5 m 
 A unit-display regression check confirmed that a 10 kN/m UDL displays as 10 N/mm in the SI unit selection. This check caught and corrected a UDL conversion error in the first implementation.
 
 These checks were run against the JavaScript calculation functions in a controlled test harness, not a full browser end-to-end test. The live GitHub Pages deployment and browser-specific export behaviour still require separate verification.
+
+## Additional cross-checks — 9 November 2026
+
+Further cases were run after reviewing the analytical validation suite in the open-source anaStruct project and external beam formula references.
+
+| Additional case | Expected analytical response | Application response |
+|---|---|---|
+| Propped cantilever, L = 6 m, q = 10 kN/m | Fixed-end vertical reaction = 37.5 kN; prop reaction = 22.5 kN; fixed-end internal moment = −45 kN·m; maximum sagging = +25.3125 kN·m | Agreement within numerical tolerance |
+| Two equal continuous spans, each 5 m, q = 1 kN/m over both spans | End reactions = 1.875 kN each; middle reaction = 6.25 kN; interior support moment = −3.125 kN·m; positive span maximum = +1.7578125 kN·m | Agreement within numerical tolerance |
+| Fixed–pinned beam, L = 2 m, q = 1 kN/m | Pin reaction = 0.75 kN; fixed reaction = 1.25 kN; fixed-end hogging moment magnitude = 0.5 kN·m | Agreement within numerical tolerance |
+
+The continuous-span case confirms that the solver can analyse a statically indeterminate multi-support arrangement when the user explicitly places multiple supports. The beam-type selector remains a preset arrangement selector; the actual calculation is driven by the support locations and types.
+
+## Independent reference sources reviewed
+
+- anaStruct project and its analytical validation tests: https://github.com/anastruct/anaStruct
+- anaStruct analytical tests: https://github.com/anastruct/anaStruct/blob/master/tests/test_analytical.py
+- anaStruct beam model documentation: https://anastruct-docs.readthedocs.io/en/latest/preprocessing_beams.html
+- OpenSeesMatlab beam stresses and deflections verification example: https://openseesmatlab.readthedocs.io/en/latest/examples/verify/verify_beam/
+- Steel Construction Institute, *Formulae for Beams*: https://www.steelconstruction.info/images/6/65/Handbook_of_Structural_Steelwork_EE_55-13.pdf
+
+These are reference materials for independent verification. No third-party solver source code has been copied into this application. The anaStruct project is licensed under LGPL-3.0; this project currently uses its own JavaScript implementation.
+
+## Remaining verification scope
+
+- The checks above validate selected elastic beam response cases; they do not prove every possible input combination.
+- The browser application has not yet undergone a complete automated browser/device/export test.
+- A direct numerical run against anaStruct or OpenSees with identical input files has not yet been performed; current cross-checks use their published analytical tests/reference examples plus independent closed-form calculations.
+- The current application does not yet support triangular/trapezoidal distributed loads, externally applied concentrated couples, settlement, elastic supports, shear deformation, axial force or geometric/material nonlinearity.
