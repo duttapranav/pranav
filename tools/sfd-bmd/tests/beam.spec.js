@@ -53,6 +53,15 @@ async function addUdl(page, q, a, b) {
   await row.locator('[data-k="b"]').fill(String(b));
 }
 
+async function addVaryingLoad(page, qStart, qEnd, a, b) {
+  await page.locator('#addUdl').click();
+  const row = page.locator('#udls .load-row').last();
+  await row.locator('[data-k="q"]').fill(String(qStart));
+  await row.locator('[data-k="qEnd"]').fill(String(qEnd));
+  await row.locator('[data-k="a"]').fill(String(a));
+  await row.locator('[data-k="b"]').fill(String(b));
+}
+
 async function analyse(page) {
   await page.locator('#analyse').click();
   await expect(page.locator('#error')).toBeHidden();
@@ -167,6 +176,65 @@ test('two-span continuous beam has a continuous hogging moment at its interior s
   expect(Number(right.shear)).toBeCloseTo(3.115, 1);
 });
 
+
+
+test('triangular full-span load gives exact reactions and moment maximum', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addVaryingLoad(page, 0, 10, 0, 6);
+  await analyse(page);
+  await expect(page.locator('#reactionTable')).toContainText('10');
+  await expect(page.locator('#reactionTable')).toContainText('20');
+  const peak = await inspectAt(page, Math.sqrt(12));
+  expect(peak.shear).toBeCloseTo(0, 2);
+  expect(peak.moment).toBeCloseTo(23.09401077, 2);
+  await expect(page.locator('#metrics')).toContainText('23.09');
+});
+
+test('trapezoidal full-span load gives analytical reactions and maximum moment', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addVaryingLoad(page, 2, 8, 0, 6);
+  await analyse(page);
+  await expect(page.locator('#reactionTable')).toContainText('12');
+  await expect(page.locator('#reactionTable')).toContainText('18');
+  const xPeak = -2 + Math.sqrt(28);
+  const peak = await inspectAt(page, xPeak);
+  expect(peak.shear).toBeCloseTo(0, 2);
+  expect(peak.moment).toBeCloseTo(22.72069114, 2);
+});
+
+test('partial triangular load is integrated from its actual start position', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addVaryingLoad(page, 0, 8, 1, 5);
+  await analyse(page);
+  await expect(page.locator('#reactionTable')).toContainText('8.8889');
+  await expect(page.locator('#reactionTable')).toContainText('7.1111');
+  const peak = await inspectAt(page, 3.5);
+  expect(peak.shear).toBeCloseTo(0, 1);
+  expect(peak.moment).toBeGreaterThan(0);
+});
+
+test('varying distributed loads preserve physical results in SI display units', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addVaryingLoad(page, 2, 8, 0, 6);
+  await analyse(page);
+  const before = await inspectAt(page, -2 + Math.sqrt(28));
+  await page.locator('#unit').selectOption('si');
+  const after = await inspectAt(page, (-2 + Math.sqrt(28)) * 1000);
+  expect(after.moment / 1e6).toBeCloseTo(before.moment, 3);
+  expect(after.shear / 1000).toBeCloseTo(before.shear, 3);
+});
 
 test('simply supported central point-load deflection matches Euler-Bernoulli solution', async ({ page }) => {
   await openApp(page);
