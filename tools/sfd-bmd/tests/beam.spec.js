@@ -123,7 +123,7 @@ test('PNG export produces beam, SFD and BMD downloads', async ({ page }) => {
   await page.locator('#png').click();
   await expect.poll(() => downloads.length, { timeout: 10000 }).toBe(3);
   const names = downloads.map(download => download.suggestedFilename()).sort();
-  expect(names).toEqual(['bmd.png', 'beam.png', 'sfd.png']);
+  expect(names).toEqual(['beam.png', 'bmd.png', 'sfd.png']);
 });
 
 test('print action invokes print and Chromium can render an A4 PDF', async ({ page }) => {
@@ -148,7 +148,12 @@ test('layout fits a narrow mobile viewport without horizontal page overflow', as
   const dimensions = await page.evaluate(() => ({
     viewport: document.documentElement.clientWidth,
     content: document.documentElement.scrollWidth,
+    offenders: [...document.querySelectorAll('body *')].map(el => {
+      const r = el.getBoundingClientRect();
+      return { tag: el.tagName, id: el.id, cls: String(el.className || '').slice(0, 80), left: Math.round(r.left), right: Math.round(r.right), width: Math.round(r.width), scrollWidth: el.scrollWidth };
+    }).filter(x => x.right > document.documentElement.clientWidth + 1 || x.left < -1).sort((a,b) => b.right - a.right).slice(0, 12),
   }));
+  console.log('MOBILE_OVERFLOW_DIAGNOSTIC', JSON.stringify(dimensions));
   expect(dimensions.content).toBeLessThanOrEqual(dimensions.viewport + 1);
 });
 
