@@ -163,7 +163,7 @@ test('two-span continuous beam has a continuous hogging moment at its interior s
   expect(Number(left.moment)).toBeCloseTo(-3.12, 1);
   expect(Number(right.moment)).toBeCloseTo(-3.12, 1);
   expect(Number(left.shear)).toBeCloseTo(-3.115, 1);
-  expect(Number(right.shear)).toBeCloseTo(3.135, 1);
+  expect(Number(right.shear)).toBeCloseTo(3.115, 1);
 });
 
 test('SI switch preserves load magnitudes and converts positions and point loads', async ({ page }) => {
