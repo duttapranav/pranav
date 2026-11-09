@@ -234,7 +234,7 @@ def verify_deflection_benchmarks() -> None:
 
     cases = [
         ("SS-DEF-POINT", "simply", "point", 0.5625, 3.0),
-        ("CANT-DEF-POINT", "cantilever", "point", 4.5, 6.0),
+        ("CANT-DEF-POINT", "cantilever", "point", 9.0, 6.0),
         ("SS-DEF-UDL", "simply", "udl", 1.0546875, 3.0),
     ]
     for case_id, kind, load_kind, expected_mm, inspect_x in cases:
