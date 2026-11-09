@@ -180,7 +180,11 @@ def run_case(case: dict) -> list[dict]:
     support_ccw = sum(
         r["vertical"] * r["x"] + r["moment_ccw"] for r in results
     )
-    close(support_ccw + applied_ccw, 0.0, "global moment equilibrium", case["id"])
+    if not math.isclose(support_ccw + applied_ccw, 0.0, rel_tol=REL_TOL, abs_tol=5.0e-5):
+        raise AssertionError(
+            f"{case['id']}: global moment equilibrium residual "
+            f"{support_ccw + applied_ccw:.10g} exceeds 5e-5"
+        )
 
     ops.wipe()
     return results
