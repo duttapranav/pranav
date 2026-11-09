@@ -1,21 +1,25 @@
 # Beam calculator verification tests
 
-This directory contains two independent verification layers:
+This directory contains independent numerical and browser verification:
 
-1. `reference_check.py` builds the same benchmark geometries in anaStruct 1.7.1 and compares support reactions and selected bending-moment results. anaStruct is installed only in CI; it is not bundled into the public static application.
-2. `beam.spec.js` runs Chromium browser regression checks against the actual `index.html`, including calculation display, SI unit switching, mixed support restraints, invalid support detection, CSV/PNG exports, print-to-PDF rendering and a narrow mobile viewport.
+1. `reference_check.py` builds each fixture in anaStruct 1.7.1 and compares support reactions and selected moment results.
+2. `opensees_reference_check.py` independently builds 2D elasticBeamColumn models in OpenSeesPy 3.8.0.0, compares all benchmark vertical support reactions, and checks global vertical equilibrium.
+3. `beam.spec.js` exercises the real application page in Playwright across Chromium, Firefox and WebKit. Chromium additionally generates an A4 PDF because Playwright's `page.pdf()` is Chromium-specific.
+
+The two reference solvers are installed only in CI; neither is bundled into the browser application.
 
 Run locally:
 
 ```bash
-python -m pip install anastruct==1.7.1
+python -m pip install anastruct==1.7.1 openseespy==3.8.0.0
 python tools/sfd-bmd/tests/reference_check.py
+python tools/sfd-bmd/tests/opensees_reference_check.py
 cd tools/sfd-bmd/tests
 npm install
-npx playwright install chromium
+npx playwright install chromium firefox webkit
 npm run test:e2e
 ```
 
-The benchmark fixture source is `../benchmark-cases.json`. The test tolerances are intentionally explicit in the test code. A passing suite is evidence for the covered cases only; it is not a proof for every possible model or a substitute for design checks and professional review.
+The benchmark fixture source is `../benchmark-cases.json`. Tolerances are explicit in each test script. A passing suite is evidence for the cases covered, not proof of correctness for every possible model or a substitute for design checks and professional review.
 
-anaStruct is distributed under GPL-3.0-or-later. It is used as an external CI reference dependency and no anaStruct source code is copied into this browser application.
+OpenSeesPy and anaStruct are external CI reference dependencies. Their source code is not copied into or shipped with the browser application. Review their respective licenses and usage terms before any separate commercial redistribution or integration.
