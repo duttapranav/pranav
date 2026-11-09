@@ -147,3 +147,19 @@ The beam input accepts clockwise-positive concentrated moments at any beam posit
 | Anticlockwise couple | Simply supported, 6 m; −12 kN·m at x = 2 m | +2, −2 kN | +4 to −8 kN·m |
 
 The browser suite checks both couple directions, reaction signs, the bending-moment jump, shear continuity, and SI-unit display conversion. The anaStruct and OpenSeesPy benchmark scripts include these load cases as independent numerical checks.
+
+
+## Prescribed support settlement — 9 November 2026
+
+Each support accepts a vertical prescribed displacement in millimetres. Downward settlement is positive and upward movement is negative. Pin and roller supports prescribe the vertical displacement while leaving rotation free; fixed supports prescribe the vertical displacement and retain zero rotation. A zero value is the ordinary no-settlement condition.
+
+The finite-element solution now partitions the stiffness system into free and prescribed degrees of freedom. For prescribed displacement vector dₚ, the reduced system is solved as Kff d_f = F_f − Kfp dₚ. Reactions are recovered from the complete residual Kd − F, so settlement-induced forces and moments are included in the support table and equilibrium checks. The beam sketch marks nonzero support movements, and the reaction table displays the prescribed settlement beside each reaction.
+
+### Closed-form settlement benchmarks
+
+| Case | Prescribed movement | Expected response |
+|---|---|---|
+| Two equal 4 m spans, E = 200 GPa, I = 0.005 m⁴ | Middle support settles 10 mm; end supports remain at zero | Outer reactions +468.75 kN each; middle reaction −937.5 kN; middle-support sagging moment +1,875 kN·m |
+| Simply supported 6 m beam | Both supports settle downward by 10 mm | Rigid-body translation; zero induced reactions and bending moment; 10 mm midspan displacement |
+
+For the two-span case, the closed-form values are R_outer = 3EIδ/L³, R_middle = −6EIδ/L³ and M_middle = 3EIδ/L², where L is the individual span and δ is the middle-support settlement. These reference values are checked separately from the browser solver. The Playwright suite additionally verifies left/right shear around the interior support, moment continuity, the settlement display, and SI-unit conversion.
