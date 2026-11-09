@@ -217,8 +217,10 @@ test('differential settlement of the middle support generates compatible reactio
   expect(left.shear).toBeCloseTo(468.75, 1);
   expect(right.shear).toBeCloseTo(-468.75, 1);
   expect(centre.moment).toBeCloseTo(1875, 1);
-  expect(left.moment).toBeCloseTo(centre.moment, 1);
-  expect(right.moment).toBeCloseTo(centre.moment, 1);
+  // The BMD is continuous at an ordinary interior support, but its
+  // value changes over the 1 mm inspection offset according to V*dM/dx.
+  expect(left.moment + left.shear * 0.001).toBeCloseTo(centre.moment, 1);
+  expect(centre.moment + right.shear * 0.001).toBeCloseTo(right.moment, 1);
   expect(centre.deflection).toBeCloseTo(10, 2);
   await expect(page.locator('#metrics')).toContainText('10');
 });
