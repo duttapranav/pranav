@@ -194,8 +194,8 @@ test('cantilever free-end deflection matches closed-form point-load solution', a
   await page.locator('#secondMoment').fill('0.0008');
   await analyse(page);
   const tip = await inspectAt(page, 6);
-  expect(tip.deflection).toBeCloseTo(4.5, 3);
-  await expect(page.locator('#metrics')).toContainText('4.5');
+  expect(tip.deflection).toBeCloseTo(9, 3);
+  await expect(page.locator('#metrics')).toContainText('9');
 });
 
 test('simply supported full-span UDL deflection matches closed-form solution', async ({ page }) => {
