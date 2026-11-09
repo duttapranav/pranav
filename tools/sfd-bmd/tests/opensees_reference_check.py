@@ -136,7 +136,9 @@ def run_case(case: dict) -> list[dict]:
     total_load = sum(
         float(p["magnitude"]) for p in case.get("point_loads", [])
     ) + sum(
-        float(u["intensity"]) * (float(u["end"]) - float(u["start"]))
+        (float(u.get("start_intensity", u.get("intensity", 0.0)))
+         + float(u.get("end_intensity", u.get("intensity", 0.0)))) / 2.0
+        * (float(u["end"]) - float(u["start"]))
         for u in case.get("udls", [])
     )
     total_reaction = sum(r["vertical"] for r in results)
