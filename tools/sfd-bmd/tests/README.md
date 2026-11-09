@@ -29,3 +29,10 @@ The anaStruct and OpenSeesPy reference scripts subdivide linearly varying load r
 
 
 Concentrated applied moments are defined as clockwise-positive in the fixtures. The independent reference models apply the corresponding nodal rotational load in anaStruct and OpenSeesPy, and check the resulting support reactions and equilibrium.
+
+
+## Prescribed support settlement
+
+The support editor includes a settlement field in millimetres, with downward displacement positive and upward displacement negative. Prescribed vertical displacements are applied directly to the constrained vertical degrees of freedom; fixed supports retain zero rotation. The solver includes the prescribed-displacement terms in the reduced stiffness equations, recovers reactions from the full residual, and reports the settlement beside each support reaction.
+
+The browser suite checks differential settlement at an intermediate support in a two-span continuous beam, equal settlement at both ends (rigid-body translation), and SI display conversion. Closed-form checks are maintained separately in `settlement-cases.json` and `settlement_reference_check.py`; they cover the equal-span two-span settlement solution and uniform settlement of a simply supported beam.
