@@ -27,6 +27,10 @@ jobs:
         run: python -m pip install --upgrade pip anastruct==1.7.1
       - name: Cross-check benchmark fixtures with anaStruct
         run: python tools/sfd-bmd/tests/reference_check.py
+      - name: Install independent OpenSeesPy reference solver
+        run: python -m pip install openseespy==3.8.0.0
+      - name: Cross-check benchmark fixtures with OpenSeesPy
+        run: python tools/sfd-bmd/tests/opensees_reference_check.py
 
   browser:
     runs-on: ubuntu-24.04
