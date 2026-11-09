@@ -86,6 +86,9 @@ test('fixed-pinned UDL produces a stable indeterminate solution', async ({ page 
   await openApp(page);
   await page.locator('#beamType').selectOption('fixed');
   await page.locator('#length').fill('2');
+  // Commit the length edit before modifying the generated default supports.
+  await page.locator('#length').dispatchEvent('change');
+  await expect(page.locator('#supports .support-row').first().locator('[data-k="type"]')).toHaveValue('fixed');
   await setSupports(page, [{ x: 0, type: 'pin' }, { x: 2, type: 'fixed' }]);
   await clearLoads(page);
   await addUdl(page, 1, 0, 2);
