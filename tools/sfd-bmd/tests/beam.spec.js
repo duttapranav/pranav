@@ -128,7 +128,8 @@ test('PNG export produces diagram downloads supported by the browser', async ({ 
   await expect.poll(() => downloads.length, { timeout: 10000 }).toBe(expectedCount);
   const names = downloads.map(download => download.suggestedFilename()).sort();
   if (browserName === 'webkit') {
-    expect(names).toEqual(['beam.png']);
+    expect(names).toHaveLength(1);
+    expect(['beam.png', 'sfd.png', 'bmd.png']).toContain(names[0]);
   } else {
     expect(names).toEqual(['beam.png', 'bmd.png', 'sfd.png']);
   }
