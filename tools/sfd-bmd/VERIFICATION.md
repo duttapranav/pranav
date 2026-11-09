@@ -32,3 +32,13 @@ This benchmark set is a regression check, not third-party certification. The too
 ## Unit equivalence
 
 The metric pair kN–m and SI pair N–mm must give identical physical results. In particular, 1 kN/m is numerically equal to 1 N/mm. Point-force and moment display conversions differ and are handled separately.
+
+## Verification run — 9 November 2026
+
+The eight closed-form benchmark cases above were executed against the application calculation functions. All eight passed using a tolerance of 0.002 in the displayed engineering units. The largest absolute vertical-force equilibrium residual among those cases was below 0.000001 kN; the largest absolute moment-equilibrium residual was below 0.000001 kN·m.
+
+An additional combined-load case (10 kN at x = 2 m plus 5 kN/m from x = 1–5 m on a 6 m simply supported beam) returned RA = 16.666667 kN, RB = 13.333333 kN and Mmax = 31.111112 kN·m, matching statics and the zero-shear location.
+
+A unit-display regression check confirmed that a 10 kN/m UDL displays as 10 N/mm in the SI unit selection. This check caught and corrected a UDL conversion error in the first implementation.
+
+These checks were run against the JavaScript calculation functions in a controlled test harness, not a full browser end-to-end test. The live GitHub Pages deployment and browser-specific export behaviour still require separate verification.
