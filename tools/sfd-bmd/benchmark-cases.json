@@ -345,6 +345,102 @@
         "fixed_support_reaction_moment_clockwise_positive": 0.5,
         "fixed_end_internal_moment": -0.5
       }
+    },
+    {
+      "id": "SS-TRIANGULAR-001",
+      "name": "Simply supported full-span triangular load increasing to right",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 6,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "start": 0,
+          "end": 6,
+          "start_intensity": 0,
+          "end_intensity": 10
+        }
+      ],
+      "expected": {
+        "reactions": [
+          10,
+          20
+        ],
+        "max_sagging_moment": 23.0940107676,
+        "min_hogging_moment": 0
+      }
+    },
+    {
+      "id": "SS-TRAPEZOIDAL-001",
+      "name": "Simply supported full-span trapezoidal load",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 6,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "start": 0,
+          "end": 6,
+          "start_intensity": 2,
+          "end_intensity": 8
+        }
+      ],
+      "expected": {
+        "reactions": [
+          12,
+          18
+        ],
+        "max_sagging_moment": 22.7206911399,
+        "min_hogging_moment": 0
+      }
+    },
+    {
+      "id": "SS-PARTIAL-TRIANGULAR-001",
+      "name": "Simply supported partial triangular load",
+      "beam_length": 6,
+      "supports": [
+        {
+          "x": 0,
+          "type": "pin"
+        },
+        {
+          "x": 6,
+          "type": "roller"
+        }
+      ],
+      "point_loads": [],
+      "udls": [
+        {
+          "start": 1,
+          "end": 5,
+          "start_intensity": 0,
+          "end_intensity": 8
+        }
+      ],
+      "expected": {
+        "reactions": [
+          6.2222222222,
+          9.7777777778
+        ],
+        "max_sagging_moment": 16.5695216622,
+        "min_hogging_moment": 0
+      }
     }
   ]
 }
