@@ -29,7 +29,12 @@ async function setSupports(page, supports) {
   for (let i = 0; i < supports.length; i++) {
     const row = page.locator('#supports .support-row').nth(i);
     await row.locator('[data-k="x"]').fill(String(supports[i].x));
-    await row.locator('[data-k="type"]').selectOption(supports[i].type);
+    const typeSelect = row.locator('[data-k="type"]');
+    await typeSelect.selectOption(supports[i].type);
+    // Explicit bubbling change event also exercises the delegated support
+    // state handler consistently across browser engines.
+    await typeSelect.dispatchEvent('change');
+    await expect(typeSelect).toHaveValue(supports[i].type);
   }
 }
 
