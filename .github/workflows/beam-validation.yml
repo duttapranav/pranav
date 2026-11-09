@@ -41,6 +41,6 @@ jobs:
       - name: Install Playwright
         run: npm install --no-audit --no-fund
       - name: Install Chromium
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install --with-deps chromium firefox webkit
       - name: Run browser regression tests
         run: npm run test:e2e
