@@ -36,17 +36,24 @@ def run_case(case: dict) -> dict:
     for load in udls:
         coordinates.add(float(load["start"]))
         coordinates.add(float(load["end"]))
-    xs = sorted(coordinates)
+    anchors = sorted(coordinates)
+    # Subdivide each load/support interval so linearly varying loads can be
+    # represented by midpoint-intensity uniform element loads. Midpoint
+    # integration preserves each linear region's total force and first moment.
+    xs_set = set(anchors)
+    for left, right in zip(anchors, anchors[1:]):
+        for j in range(1, 41):
+            xs_set.add(left + (right - left) * j / 40)
+    xs = sorted(xs_set)
 
-    # Large EA/EI values keep this comparison focused on the beam's statics
-    # and elastic flexural response, without introducing axial loading.
+    # Large EA/EI values keep this comparison focused on beam response.
     model = SystemElements(EA=1.0e9, EI=1.0e6, mesh=1000)
     element_for_interval = {}
     for x0, x1 in zip(xs, xs[1:]):
         model.add_element(location=[[x0, 0.0], [x1, 0.0]])
         element_for_interval[(x0, x1)] = len(element_for_interval) + 1
 
-    node_for_x = {x: model.find_node_id(vertex=[x, 0.0]) for x in xs}
+    node_for_x = {x: model.find_node_id(vertex=[x, 0.0]) for x in anchors}
 
     for support in supports:
         node_id = node_for_x[float(support["x"])]
@@ -70,9 +77,14 @@ def run_case(case: dict) -> dict:
 
     for load in udls:
         start, end = float(load["start"]), float(load["end"])
+        q0 = float(load.get("start_intensity", load.get("intensity", 0.0)))
+        q1 = float(load.get("end_intensity", load.get("intensity", q0)))
         for (x0, x1), element_id in element_for_interval.items():
-            if x0 >= start - 1e-10 and x1 <= end + 1e-10:
-                model.q_load(q=float(load["intensity"]), element_id=element_id)
+            midpoint = (x0 + x1) / 2
+            if midpoint >= start - 1e-10 and midpoint <= end + 1e-10:
+                intensity = q0 + (q1 - q0) * (midpoint - start) / (end - start)
+                if intensity:
+                    model.q_load(q=intensity, element_id=element_id)
 
     model.solve()
 
