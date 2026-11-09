@@ -43,7 +43,7 @@ A unit-display regression check confirmed that a 10 kN/m UDL displays as 10 N/mm
 
 The solver was subsequently cross-checked directly against anaStruct 1.7.1 using the same 11 reproducible benchmark fixtures in `benchmark-cases.json`. The independent reference job completed successfully for all 11 cases. The comparison checks support reactions and the relevant end-moment / maximum-moment results represented in each fixture. The reference runner constructs the beam in anaStruct from the fixture geometry and load regions; anaStruct is used only in CI and is not bundled into the browser application.
 
-A Chromium browser regression suite also completed successfully: 5 of 5 tests passed. The tests cover a simply supported central point load, SI-unit switching, a fixed-pinned UDL case, duplicate-support validation, and CSV download. The browser tests exercise the actual application page in a headless browser. PNG download, print-to-PDF output, mobile-device layout, and the live GitHub Pages deployment still require separate manual checks.
+A Chromium browser regression suite also completed successfully: 8 of 8 tests passed. The tests cover a simply supported central point load, SI-unit switching, a fixed-pinned UDL case, duplicate-support validation, CSV and PNG downloads, print-to-PDF rendering, and mobile viewport overflow. The browser tests exercise the actual application page in a headless browser. PNG download, print-to-PDF output, mobile-device layout, and the live GitHub Pages deployment still require separate manual checks.
 
 ## Additional cross-checks — 9 November 2026
 
@@ -78,7 +78,7 @@ These are reference materials for independent verification. No third-party solve
 ## Remaining verification scope
 
 - The checks validate selected elastic beam response cases; they do not prove every possible input combination.
-- PNG download, print-to-PDF output, mobile-device layout, and live GitHub Pages deployment still require separate manual checks.
+- Live GitHub Pages deployment, additional mobile devices/browsers, and broader export edge cases still require separate manual checks.
 - A direct OpenSees run using the identical fixture inputs has not yet been performed. OpenSees documentation and verification examples were reviewed as additional reference material.
 - The current application does not yet support triangular/trapezoidal distributed loads, externally applied concentrated couples, settlement, elastic supports, shear deformation, axial force or geometric/material nonlinearity.
 - The tool remains an educational and preliminary-analysis application, not a substitute for design-code checks or independent professional review.
