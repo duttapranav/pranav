@@ -14,6 +14,8 @@ This file records independent closed-form benchmark cases used to check the beam
 | Simply supported, eccentric point load | L = 6 m; P = 12 kN at x = 2 m | RA = 8 kN; RB = 4 kN; Mmax = +16 kN·m at x = 2 m |
 | Simply supported, partial UDL | L = 6 m; q = 5 kN/m over x = 1–4 m | RA = 8.75 kN; RB = 6.25 kN; Mmax = +16.40625 kN·m at x = 2.75 m |
 | Left overhang with tip load | L = 6 m; supports at x = 1 m and 5 m; P = 10 kN at x = 0 | RA = +12.5 kN; RB = −2.5 kN (uplift); moment at support A = −10 kN·m |
+| Simply supported with clockwise applied moment | L = 6 m; +12 kN·m at x = 2 m | RA = −2 kN; RB = +2 kN; BMD jumps from −4 to +8 kN·m at the couple |
+| Simply supported with anticlockwise applied moment | L = 6 m; −12 kN·m at x = 2 m | RA = +2 kN; RB = −2 kN; BMD jumps from +4 to −8 kN·m at the couple |
 
 ## Numerical method
 
