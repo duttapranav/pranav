@@ -35,6 +35,9 @@ async function setSupports(page, supports) {
     // state handler consistently across browser engines.
     await typeSelect.dispatchEvent('change');
     await expect(typeSelect).toHaveValue(supports[i].type);
+    if (supports[i].settlement !== undefined) {
+      await row.locator('[data-k="settlement"]').fill(String(supports[i].settlement));
+    }
   }
 }
 
@@ -184,6 +187,86 @@ test('two-span continuous beam has a continuous hogging moment at its interior s
 });
 
 
+
+
+test('differential settlement of the middle support generates compatible reactions and BMD', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('8');
+  await page.locator('#length').press('Tab');
+  await page.locator('#elasticModulus').fill('200');
+  await page.locator('#secondMoment').fill('0.005');
+  await setSupports(page, [
+    { x: 0, type: 'pin', settlement: 0 },
+    { x: 4, type: 'roller', settlement: 10 },
+    { x: 8, type: 'roller', settlement: 0 },
+  ]);
+  await clearLoads(page);
+  await analyse(page);
+
+  const rows = page.locator('#reactionTable tbody tr');
+  await expect(rows).toHaveCount(3);
+  await expect(rows.nth(0)).toContainText('468.75');
+  await expect(rows.nth(1)).toContainText('-937.5');
+  await expect(rows.nth(2)).toContainText('468.75');
+  await expect(rows.nth(1)).toContainText('10');
+
+  const left = await inspectAt(page, 3.999);
+  const centre = await inspectAt(page, 4);
+  const right = await inspectAt(page, 4.001);
+  expect(left.shear).toBeCloseTo(468.75, 1);
+  expect(right.shear).toBeCloseTo(-468.75, 1);
+  expect(centre.moment).toBeCloseTo(1875, 1);
+  expect(left.moment).toBeCloseTo(centre.moment, 1);
+  expect(right.moment).toBeCloseTo(centre.moment, 1);
+  expect(centre.deflection).toBeCloseTo(10, 2);
+  await expect(page.locator('#metrics')).toContainText('10');
+});
+
+test('equal settlement at both ends produces rigid-body translation without induced actions', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await page.locator('#length').press('Tab');
+  await setSupports(page, [
+    { x: 0, type: 'pin', settlement: 10 },
+    { x: 6, type: 'roller', settlement: 10 },
+  ]);
+  await clearLoads(page);
+  await analyse(page);
+
+  const rows = page.locator('#reactionTable tbody tr');
+  await expect(rows).toHaveCount(2);
+  const reactions = await Promise.all([0, 1].map(async i => {
+    const cells = rows.nth(i).locator('td');
+    return Number((await cells.nth(3).innerText()).replaceAll(',', ''));
+  }));
+  expect(Math.abs(reactions[0])).toBeLessThan(0.01);
+  expect(Math.abs(reactions[1])).toBeLessThan(0.01);
+  const mid = await inspectAt(page, 3);
+  expect(mid.deflection).toBeCloseTo(10, 3);
+  expect(mid.moment).toBeCloseTo(0, 4);
+});
+
+test('support settlement remains in millimetres and physical response is invariant in SI display', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('8');
+  await page.locator('#length').press('Tab');
+  await setSupports(page, [
+    { x: 0, type: 'pin', settlement: 0 },
+    { x: 4, type: 'roller', settlement: 10 },
+    { x: 8, type: 'roller', settlement: 0 },
+  ]);
+  await clearLoads(page);
+  await analyse(page);
+  const before = await inspectAt(page, 4);
+  await page.locator('#unit').selectOption('si');
+  const after = await inspectAt(page, 4000);
+  expect(after.deflection).toBeCloseTo(before.deflection, 2);
+  expect(after.moment / 1e6).toBeCloseTo(before.moment, 2);
+  await expect(page.locator('#reactionTable')).toContainText('10');
+});
 
 test('concentrated clockwise moment produces the correct BMD jump and reactions', async ({ page }) => {
   await openApp(page);
