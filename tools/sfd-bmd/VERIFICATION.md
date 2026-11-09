@@ -21,7 +21,7 @@ This file records independent closed-form benchmark cases used to check the beam
 - Mesh nodes are inserted at support positions, point-load positions and UDL boundaries.
 - Uniformly distributed loads are applied using consistent element load vectors.
 - Support restraints are applied to the relevant degrees of freedom, and reactions are recovered from restrained-degree-of-freedom residuals.
-- The SFD is recovered from vertical equilibrium; the BMD is recovered from the applied loads and support actions.
+- The SFD is recovered from vertical equilibrium; the BMD is recovered from the applied loads, support actions and concentrated-couple jumps. Applied moments enter as nodal rotational loads, leave shear continuous, and create the corresponding signed jump in the BMD.
 - Diagram sampling includes left- and right-hand values at concentrated actions so shear jumps are not hidden.
 - Maximum/minimum bending moments are checked at event locations and at zero-shear locations within each constant-load interval.
 
@@ -133,3 +133,15 @@ The shear-force function integrates the linear load intensity exactly, producing
 | Simply supported, 6 m, partial triangular | 0 to 8 kN/m over x = 1–5 m | 6.2222, 9.7778 kN | 16.5695 kN·m |
 
 Browser tests also verify the varying-load input fields, moment-extremum locations, and preservation of physical results when switching to SI display units. The independent anaStruct and OpenSeesPy reference runners subdivide each varying-load region and apply midpoint-intensity element loads; midpoint integration preserves the total force and first moment of a linearly varying load. This is a mesh-based independent cross-check, while the browser solver uses exact consistent element loading.
+
+
+## Concentrated applied moments — 9 November 2026
+
+The beam input accepts clockwise-positive concentrated moments at any beam position; negative values represent anticlockwise couples. The couple is applied as a nodal rotational load in the Euler–Bernoulli finite-element model. It contributes to global moment equilibrium and produces a discontinuity in the bending-moment diagram while leaving the shear-force diagram continuous. Left- and right-hand section-inspector values are retained at the moment location.
+
+| Case | Beam and action | Reactions (left, right) | BMD immediately around the couple |
+|---|---|---:|---:|
+| Clockwise couple | Simply supported, 6 m; +12 kN·m at x = 2 m | −2, +2 kN | −4 to +8 kN·m |
+| Anticlockwise couple | Simply supported, 6 m; −12 kN·m at x = 2 m | +2, −2 kN | +4 to −8 kN·m |
+
+The browser suite checks both couple directions, reaction signs, the bending-moment jump, shear continuity, and SI-unit display conversion. The anaStruct and OpenSeesPy benchmark scripts include these load cases as independent numerical checks.
