@@ -71,8 +71,10 @@ These are reference materials for independent verification. No third-party solve
 
 - **Independent solver 1:** anaStruct 1.7.1 — 11/11 benchmark fixtures passed, including support reactions and applicable moment results.
 - **Independent solver 2:** OpenSeesPy 3.8.0.0 — 11/11 benchmark fixtures passed for vertical support reactions and global vertical equilibrium; fixed-support reaction/end-moment sign checks are included where benchmark values are defined.
-- **Browser regression:** Playwright 1.56.1 — cross-browser checks in Chromium, Firefox and WebKit. Chromium and Firefox verify all three PNG downloads; WebKit verifies the first PNG download available from a single user gesture. The A4 PDF generation test is Chromium-only.
-- **Workflow:** [GitHub Actions run 42586201840](https://github.com/duttapranav/pranav/actions/runs/42586201840) is the current run for the dual-solver checks; its browser job is being rerun after a WebKit download-order assertion was corrected.
+- **Browser regression:** Playwright 1.56.1 — 34 passed, 2 intentionally skipped, across 36 executions in Chromium, Firefox and WebKit. The skipped tests are the PDF-generation check in Firefox and WebKit because Playwright's `page.pdf()` is Chromium-only.
+- **Diagram-level checks:** point-load shear jump and bending-moment continuity; partial-UDL shear slope and peak moment; cantilever hogging moment profile; and moment continuity plus shear jump at an interior support in a two-span continuous beam. These tests read the application's section inspector at selected beam positions.
+- **Exports and layout:** CSV download in all three browsers; all three PNG downloads in Chromium and Firefox; first PNG download in WebKit; A4 PDF rendering in Chromium; narrow mobile viewport overflow check in all three browsers.
+- **Workflow:** [GitHub Actions run 42587036962](https://github.com/duttapranav/pranav/actions/runs/42587036962) — both independent reference and cross-browser jobs completed successfully.
 - **Test sources:** [anaStruct cross-check script](tests/reference_check.py), [OpenSeesPy cross-check script](tests/opensees_reference_check.py), [Playwright browser tests](tests/beam.spec.js), and [benchmark fixtures](benchmark-cases.json).
 - Independent solver comparisons are additional evidence, not certification or proof of correctness for every possible input.
 
@@ -80,6 +82,6 @@ These are reference materials for independent verification. No third-party solve
 
 - The checks validate selected elastic beam response cases; they do not prove every possible input combination.
 - Live GitHub Pages deployment, additional mobile devices/browsers, and broader export edge cases still require separate manual checks.
-- The OpenSeesPy check currently compares vertical support reactions and global vertical equilibrium for all 11 fixtures, plus fixed-support reaction/end moments where fixture values are defined. It does not yet compare full element-force diagrams or deflection profiles.
+- The OpenSeesPy check currently compares vertical support reactions and global vertical equilibrium for all 11 fixtures, plus fixed-support reaction/end moments where fixture values are defined. The Playwright section-inspector checks validate selected SFD/BMD values in the application. Full diagram arrays and deflection profiles have not yet been compared directly against OpenSeesPy or anaStruct.
 - The current application does not yet support triangular/trapezoidal distributed loads, externally applied concentrated couples, settlement, elastic supports, shear deformation, axial force or geometric/material nonlinearity.
 - The tool remains an educational and preliminary-analysis application, not a substitute for design-code checks or independent professional review.
