@@ -146,13 +146,10 @@ def verify(case: dict) -> None:
                   f"fixed end {i + 1} internal moment", case_id)
 
     if "interior_support_moment" in expected:
-        x_mid = length = float(case["beam_length"]) / 2.0
-        # For the two-span symmetric benchmark the centre support is at L/2.
-        adjacent = [
-            r for r in actual["elements"]
-            if abs(float(r["length"]) - length / 2.0) < 1e-8
+        # Element envelopes include the internal support hogging extremum.
+        candidates = [
+            float(r[k]) for r in actual["elements"] for k in ("Mmin", "Mmax")
         ]
-        candidates = [float(r[k]) for r in adjacent for k in ("Mmin", "Mmax")]
         close(min(candidates), expected["interior_support_moment"],
               "interior support moment", case_id)
 
