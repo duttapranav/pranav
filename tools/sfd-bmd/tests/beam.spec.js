@@ -62,6 +62,13 @@ async function addVaryingLoad(page, qStart, qEnd, a, b) {
   await row.locator('[data-k="b"]').fill(String(b));
 }
 
+async function addMoment(page, m, x) {
+  await page.locator('#addMoment').click();
+  const row = page.locator('#moments .load-row').last();
+  await row.locator('[data-k="m"]').fill(String(m));
+  await row.locator('[data-k="x"]').fill(String(x));
+}
+
 async function analyse(page) {
   await page.locator('#analyse').click();
   await expect(page.locator('#error')).toBeHidden();
@@ -177,6 +184,52 @@ test('two-span continuous beam has a continuous hogging moment at its interior s
 });
 
 
+
+test('concentrated clockwise moment produces the correct BMD jump and reactions', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addMoment(page, 12, 2);
+  await analyse(page);
+  await expect(page.locator('#reactionTable')).toContainText('-2');
+  await expect(page.locator('#reactionTable')).toContainText('2');
+  const left = await inspectAt(page, 1.999);
+  const right = await inspectAt(page, 2.001);
+  expect(left.moment).toBeCloseTo(-4, 1);
+  expect(right.moment).toBeCloseTo(8, 1);
+  expect(right.shear).toBeCloseTo(left.shear, 2);
+  await expect(page.locator('#metrics')).toContainText('8');
+});
+
+test('anticlockwise applied moment reverses the bending-moment jump', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addMoment(page, -12, 2);
+  await analyse(page);
+  await expect(page.locator('#reactionTable')).toContainText('2');
+  await expect(page.locator('#reactionTable')).toContainText('-2');
+  const left = await inspectAt(page, 1.999);
+  const right = await inspectAt(page, 2.001);
+  expect(right.moment - left.moment).toBeCloseTo(-12, 1);
+  expect(right.shear).toBeCloseTo(left.shear, 2);
+});
+
+test('applied moments preserve physical results in SI display units', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addMoment(page, 12, 2);
+  await analyse(page);
+  const before = await inspectAt(page, 2.001);
+  await page.locator('#unit').selectOption('si');
+  const after = await inspectAt(page, 2001);
+  expect(after.moment / 1e6).toBeCloseTo(before.moment, 2);
+  expect(after.shear / 1000).toBeCloseTo(before.shear, 2);
+});
 
 test('triangular full-span load gives exact reactions and moment maximum', async ({ page }) => {
   await openApp(page);
