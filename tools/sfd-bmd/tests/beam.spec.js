@@ -126,7 +126,8 @@ test('PNG export produces beam, SFD and BMD downloads', async ({ page }) => {
   expect(names).toEqual(['beam.png', 'bmd.png', 'sfd.png']);
 });
 
-test('print action invokes print and Chromium can render an A4 PDF', async ({ page }) => {
+test('print action invokes print and Chromium can render an A4 PDF', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'page.pdf is supported by Chromium only');
   await page.addInitScript(() => {
     window.__printInvoked = false;
     window.print = () => { window.__printInvoked = true; };
