@@ -3,7 +3,7 @@
 This directory contains two independent verification layers:
 
 1. `reference_check.py` builds the same benchmark geometries in anaStruct 1.7.1 and compares support reactions and selected bending-moment results. anaStruct is installed only in CI; it is not bundled into the public static application.
-2. `beam.spec.js` runs Chromium browser regression checks against the actual `index.html`, including calculation display, SI unit switching, invalid support detection and CSV download.
+2. `beam.spec.js` runs Chromium browser regression checks against the actual `index.html`, including calculation display, SI unit switching, mixed support restraints, invalid support detection, CSV/PNG exports, print-to-PDF rendering and a narrow mobile viewport.
 
 Run locally:
 
