@@ -1,0 +1,39 @@
+{
+  "schema_version": "1.0",
+  "units": "kN,m,mm",
+  "sign_convention": {
+    "settlement": "downward positive",
+    "reaction": "upward positive",
+    "bending_moment": "sagging positive"
+  },
+  "cases": [
+    {
+      "id": "SETTLE-2SPAN-MIDDLE-001",
+      "type": "two_equal_spans_middle_support_settlement",
+      "description": "Two equal 4 m spans with 10 mm downward settlement at the intermediate support; no applied loads.",
+      "span_m": 4,
+      "E_kN_m2": 200000000,
+      "I_m4": 0.005,
+      "settlement_mm": 10,
+      "expected": {
+        "outer_reaction_kN": 468.75,
+        "middle_reaction_kN": -937.5,
+        "middle_sagging_kNm": 1875
+      }
+    },
+    {
+      "id": "SETTLE-SS-UNIFORM-001",
+      "type": "equal_settlement_simple_span",
+      "description": "Simply supported 6 m beam with both supports settling downward by 10 mm; rigid-body translation only.",
+      "span_m": 6,
+      "E_kN_m2": 200000000,
+      "I_m4": 0.0008,
+      "settlement_mm": 10,
+      "expected": {
+        "reaction_each_kN": 0,
+        "bending_moment_kNm": 0,
+        "midspan_deflection_mm": 10
+      }
+    }
+  ]
+}
