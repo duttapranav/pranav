@@ -43,3 +43,8 @@ The browser suite checks differential settlement at an intermediate support in a
 Select **Elastic** in the support type field. Enter vertical spring stiffness (k_v), rotational spring stiffness (k_r), and (optionally) the prescribed vertical ground settlement. The vertical stiffness is displayed in kN/m (or N/mm in SI); rotational stiffness is displayed in kN·m/rad (or N·mm/rad in SI). At least one stiffness must be positive. Pin, roller and fixed supports retain their existing ideal restraint behaviour.
 
 The browser suite checks symmetric vertical spring reactions under a central point load, the expected (R/k_v) spring displacement, equal ground settlement with zero spring force, rejection of a zero-stiffness elastic support, and rotational spring moment sharing at the tip of a cantilever. The rotational-spring closed-form check uses the cantilever's free-tip rotational stiffness (EI/L), because its vertical tip degree of freedom remains free.
+
+
+## Exported analysis CSV
+
+The CSV report is organised into clearly labelled sections: analysis summary, supports, point loads, applied moments, distributed loads, and sampled beam response. The support section records support type, position, ground settlement, translational and rotational spring stiffness (where applicable), vertical reaction, and reaction moment. Units follow the currently selected Metric or SI display system. The file uses UTF-8 encoding with a byte-order mark for spreadsheet compatibility and quotes fields containing commas, quotes or line breaks.
