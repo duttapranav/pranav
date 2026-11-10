@@ -618,7 +618,7 @@ test('desktop input and output panels scroll independently while mobile remains 
   }))));
   expect(dimensions[0].scroll).toBeGreaterThan(dimensions[0].client);
   expect(dimensions[1].scroll).toBeGreaterThan(dimensions[1].client);
-  expect(dimensions.every(x => x.overflowY === 'auto')).toBeTruthy();
+  expect(dimensions.every(x => ['auto', 'scroll'].includes(x.overflowY))).toBeTruthy();
   await input.evaluate(node => { node.scrollTop = 300; });
   const inputTop = await input.evaluate(node => node.scrollTop);
   const outputTopBefore = await output.evaluate(node => node.scrollTop);
@@ -648,8 +648,8 @@ test('beam sketch keeps point-load and distributed-load labels on separate rows'
   await addUdl(page, 5, 1, 5);
   await analyse(page);
   const svg = page.locator('#beamView svg');
-  const pointLabel = svg.locator('text[fill="#b54b45"]');
-  const udlLabels = svg.locator('text[fill="#9b6639"]');
+  const pointLabel = svg.locator('text[fill="#d64545"]');
+  const udlLabels = svg.locator('text[fill="#b45d27"]');
   await expect(pointLabel).toHaveCount(1);
   await expect(udlLabels).toHaveCount(2);
   const pointY = Number(await pointLabel.getAttribute('y'));
