@@ -607,6 +607,37 @@ test('CSV export downloads a results file after analysis', async ({ page }) => {
   expect(download.suggestedFilename()).toBe('beam-analysis-results.csv');
 });
 
+test('CSV export includes elastic support properties, reactions and model summary', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await page.locator('#length').press('Tab');
+  const rows = page.locator('#supports .support-row');
+  for (let i = 0; i < 2; i++) {
+    await rows.nth(i).locator('[data-k="type"]').selectOption('elastic');
+    await rows.nth(i).locator('[data-k="kv"]').fill('1000');
+    await rows.nth(i).locator('[data-k="kr"]').fill('250');
+  }
+  await clearLoads(page);
+  await addPoint(page, 20, 3);
+  await analyse(page);
+  const downloadPromise = page.waitForEvent('download');
+  await page.locator('#csv').click();
+  const download = await downloadPromise;
+  const stream = await download.createReadStream();
+  let content = '';
+  for await (const chunk of stream) content += chunk.toString('utf8');
+  expect(content).toContain('ANALYSIS SUMMARY');
+  expect(content).toContain('SUPPORTS');
+  expect(content).toContain('Vertical stiffness (kN/m)');
+  expect(content).toContain('Rotational stiffness (kN·m/rad)');
+  expect(content).toContain('Vertical reaction (kN)');
+  expect(content).toContain('BEAM RESPONSE SAMPLES');
+  expect(content).toContain('elastic');
+  expect(content).toContain('1000');
+  expect(content).toContain('250');
+});
+
 test('PNG export produces diagram downloads supported by the browser', async ({ page, browserName }) => {
   await openApp(page);
   await page.locator('#analyse').click();
