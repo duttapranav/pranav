@@ -607,6 +607,36 @@ test('CSV export downloads a results file after analysis', async ({ page }) => {
   expect(download.suggestedFilename()).toBe('beam-analysis-results.csv');
 });
 
+test('desktop input and output panels scroll independently while mobile remains stacked', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openApp(page);
+  const layout = page.locator('.layout');
+  const input = page.locator('.panel');
+  const output = page.locator('.right');
+  const dimensions = await Promise.all([input, output].map(el => el.evaluate(node => ({
+    client: node.clientHeight, scroll: node.scrollHeight, overflowY: getComputedStyle(node).overflowY
+  }))));
+  expect(dimensions[0].scroll).toBeGreaterThan(dimensions[0].client);
+  expect(dimensions[1].scroll).toBeGreaterThan(dimensions[1].client);
+  expect(dimensions.every(x => x.overflowY === 'auto')).toBeTruthy();
+  await input.evaluate(node => { node.scrollTop = 300; });
+  const inputTop = await input.evaluate(node => node.scrollTop);
+  const outputTopBefore = await output.evaluate(node => node.scrollTop);
+  await output.evaluate(node => { node.scrollTop = 250; });
+  const outputTop = await output.evaluate(node => node.scrollTop);
+  expect(inputTop).toBeGreaterThan(0);
+  expect(outputTop).toBeGreaterThan(0);
+  expect(await input.evaluate(node => node.scrollTop)).toBe(inputTop);
+  expect(outputTopBefore).toBe(0);
+
+  await page.setViewportSize({ width: 768, height: 900 });
+  const mobile = await Promise.all([input, output].map(el => el.evaluate(node => ({
+    height: node.clientHeight, scroll: node.scrollHeight, overflowY: getComputedStyle(node).overflowY
+  }))));
+  expect(mobile.every(x => x.overflowY === 'visible')).toBeTruthy();
+  expect(mobile[0].height).toBe(mobile[0].scroll);
+});
+
 test('beam sketch keeps point-load and distributed-load labels on separate rows', async ({ page }) => {
   await openApp(page);
   await page.locator('#beamType').selectOption('simply');
