@@ -234,6 +234,31 @@ test('symmetric vertical elastic supports share a central point load equally', a
   await expect(page.locator('#steps')).toContainText('elastic translational and rotational spring stiffnesses');
 });
 
+test('elastic spring stiffness and response remain physically consistent in SI display units', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await page.locator('#length').press('Tab');
+  const rows = page.locator('#supports .support-row');
+  for (let i = 0; i < 2; i++) {
+    await rows.nth(i).locator('[data-k="type"]').selectOption('elastic');
+    await rows.nth(i).locator('[data-k="kv"]').fill('1000');
+    await rows.nth(i).locator('[data-k="kr"]').fill('250');
+  }
+  await clearLoads(page);
+  await addPoint(page, 20, 3);
+  await analyse(page);
+  const metricMid = await inspectAt(page, 3);
+  await page.locator('#unit').selectOption('si');
+  await expect(page.locator('#length')).toHaveValue('6000');
+  await expect(page.locator('#supports .support-row').first().locator('[data-k="kv"]')).toHaveValue('1000');
+  await expect(page.locator('#supports .support-row').first().locator('[data-k="kr"]')).toHaveValue('250000000');
+  const siMid = await inspectAt(page, 3000);
+  expect(siMid.deflection).toBeCloseTo(metricMid.deflection, 3);
+  await expect(page.locator('#reactionTable tbody tr').nth(0)).toContainText('10000');
+  await expect(page.locator('#reactionTable tbody tr').nth(1)).toContainText('10000');
+});
+
 test('elastic vertical spring displacement follows reaction divided by stiffness', async ({ page }) => {
   await openApp(page);
   await page.locator('#beamType').selectOption('simply');
