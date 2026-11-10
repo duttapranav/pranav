@@ -176,3 +176,8 @@ The elastic support model adds vertical spring stiffness directly to the transla
 | Cantilever with tip rotational spring | L = 6 m; E = 200 GPa; I = 0.0008 m⁴; kᵣ = 1,000 kN·m/rad at tip; applied tip couple = 10 kN·m | Tip rotation = M/(EI/L + kᵣ); spring reaction moment = −kᵣ × tip rotation = approximately −0.36145 kN·m |
 
 These spring checks are included in the browser regression suite. The SI input equivalents are kᵥ in N/mm and kᵣ in N·mm/rad; 1 N/mm = 1 kN/m and 1 N·mm/rad = 10⁻⁶ kN·m/rad.
+
+
+## Print/PDF calculation report
+
+The Print / Save report as PDF action uses a dedicated A4 print stylesheet with defined page margins, print-only report metadata, and a preliminary-analysis disclaimer. The report includes the beam model summary, material/section properties, diagrams, critical response values, support reactions (including elastic spring stiffnesses), and calculation/equilibrium notes. Browser print preview can be used to save the report as PDF. Page breaks depend on the browser's print engine; review the generated PDF before issuing it as a project record.
