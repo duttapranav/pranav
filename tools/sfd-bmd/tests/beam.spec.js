@@ -268,7 +268,7 @@ test('rotational spring at cantilever tip shares an applied end moment', async (
   await clearLoads(page);
   await addMoment(page, 10, 6);
   await analyse(page);
-  // theta = M / (4EI/L + k_theta); M_spring = k_theta * theta.
+  // With the tip's vertical DOF free, the cantilever's rotational stiffness is EI/L.
   const theta = 10 / (200000000 * 0.0008 / 6 + 1000);
   const expectedSpringMoment = 1000 * theta;
   await expect(page.locator('#reactionTable tbody tr').nth(1)).toContainText(expectedSpringMoment.toFixed(2));
