@@ -173,6 +173,6 @@ The elastic support model adds vertical spring stiffness directly to the transla
 |---|---|---|
 | Symmetric vertical springs, central point load | L = 6 m; P = 20 kN at midspan; kᵥ = 1,000 kN/m at both ends; E = 200 GPa; I = 0.0008 m⁴ | Each support reaction = 10 kN; each end settles elastically by 10 mm; midspan deflection = 10.5625 mm |
 | Equal spring-ground settlement | L = 6 m; both end springs kᵥ = 1,000 kN/m; both ground settlements = 10 mm; no applied loads | Rigid-body translation of 10 mm; zero support reactions and zero bending moment |
-| Cantilever with tip rotational spring | L = 6 m; E = 200 GPa; I = 0.0008 m⁴; kᵣ = 1,000 kN·m/rad at tip; applied tip couple = 10 kN·m | Tip rotation = M/(EI/L + kᵣ); spring moment = kᵣ × tip rotation = approximately 0.36145 kN·m |
+| Cantilever with tip rotational spring | L = 6 m; E = 200 GPa; I = 0.0008 m⁴; kᵣ = 1,000 kN·m/rad at tip; applied tip couple = 10 kN·m | Tip rotation = M/(EI/L + kᵣ); spring reaction moment = −kᵣ × tip rotation = approximately −0.36145 kN·m |
 
 These spring checks are included in the browser regression suite. The SI input equivalents are kᵥ in N/mm and kᵣ in N·mm/rad; 1 N/mm = 1 kN/m and 1 N·mm/rad = 10⁻⁶ kN·m/rad.
