@@ -96,6 +96,32 @@ async function inspectAt(page, x) {
   };
 }
 
+test('editing beam inputs invalidates stale results and disables exports until recalculated', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await clearLoads(page);
+  await addPoint(page, 20, 3);
+  await analyse(page);
+
+  await page.locator('#length').fill('1');
+  await expect(page.locator('#sfd svg')).toHaveCount(0);
+  await expect(page.locator('#metrics')).toContainText('inputs have changed');
+  await expect(page.locator('#png')).toBeDisabled();
+  await expect(page.locator('#pdf')).toBeDisabled();
+  await expect(page.locator('#csv')).toBeDisabled();
+
+  await page.locator('#analyse').click();
+  await expect(page.locator('#error')).toContainText('point load magnitudes and positions');
+  await expect(page.locator('#sfd svg')).toHaveCount(0);
+
+  await page.locator('#length').fill('6');
+  await page.locator('#analyse').click();
+  await expect(page.locator('#error')).toBeHidden();
+  await expect(page.locator('#sfd svg')).toBeVisible();
+  await expect(page.locator('#png')).toBeEnabled();
+});
+
 test('simply supported central point load gives correct reactions and BMD', async ({ page }) => {
   await openApp(page);
   await page.locator('#beamType').selectOption('simply');
