@@ -607,6 +607,30 @@ test('CSV export downloads a results file after analysis', async ({ page }) => {
   expect(download.suggestedFilename()).toBe('beam-analysis-results.csv');
 });
 
+test('beam sketch keeps point-load and distributed-load labels on separate rows', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await page.locator('#length').press('Tab');
+  await clearLoads(page);
+  await addPoint(page, 20, 3);
+  await addUdl(page, 10, 0, 6);
+  await addUdl(page, 5, 1, 5);
+  await analyse(page);
+  const svg = page.locator('#beamView svg');
+  const pointLabel = svg.locator('text[fill="#b54b45"]');
+  const udlLabels = svg.locator('text[fill="#9b6639"]');
+  await expect(pointLabel).toHaveCount(1);
+  await expect(udlLabels).toHaveCount(2);
+  const pointY = Number(await pointLabel.getAttribute('y'));
+  const udlY = await udlLabels.evaluateAll(nodes => nodes.map(n => Number(n.getAttribute('y'))));
+  expect(pointY).toBe(13);
+  expect(udlY.every(y => y >= 42)).toBeTruthy();
+  expect(Math.abs(udlY[1] - udlY[0])).toBeGreaterThanOrEqual(15);
+  const svgHeight = await svg.getAttribute('viewBox');
+  expect(Number(svgHeight.split(' ')[3])).toBeGreaterThan(190);
+});
+
 test('PDF report print view includes A4 layout, model metadata and report disclaimer', async ({ page }) => {
   await openApp(page);
   await page.locator('#analyse').click();
