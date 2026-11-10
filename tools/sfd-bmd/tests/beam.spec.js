@@ -215,6 +215,51 @@ test('two-span continuous beam has a continuous hogging moment at its interior s
 
 
 
+test('symmetric vertical elastic supports share a central point load equally', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await page.locator('#length').press('Tab');
+  await clearLoads(page);
+  const rows = page.locator('#supports .support-row');
+  for (let i = 0; i < 2; i++) {
+    await rows.nth(i).locator('[data-k="type"]').selectOption('elastic');
+    await rows.nth(i).locator('[data-k="kv"]').fill('1000');
+    await rows.nth(i).locator('[data-k="kr"]').fill('0');
+  }
+  await addPoint(page, 20, 3);
+  await analyse(page);
+  await expect(page.locator('#reactionTable tbody tr').nth(0)).toContainText('10');
+  await expect(page.locator('#reactionTable tbody tr').nth(1)).toContainText('10');
+  await expect(page.locator('#steps')).toContainText('elastic spring stiffnesses');
+});
+
+test('equal settlement of two vertical elastic supports produces rigid translation', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await page.locator('#length').press('Tab');
+  const rows = page.locator('#supports .support-row');
+  for (let i = 0; i < 2; i++) {
+    await rows.nth(i).locator('[data-k="type"]').selectOption('elastic');
+    await rows.nth(i).locator('[data-k="settlement"]').fill('10');
+    await rows.nth(i).locator('[data-k="kv"]').fill('1000');
+    await rows.nth(i).locator('[data-k="kr"]').fill('0');
+  }
+  await clearLoads(page);
+  await analyse(page);
+  const mid = await inspectAt(page, 3);
+  expect(mid.deflection).toBeCloseTo(10, 2);
+  await expect(page.locator('#reactionTable')).toContainText('0');
+});
+
+test('rejects an elastic support with no spring stiffness', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#supports .support-row').first().locator('[data-k="type"]').selectOption('elastic');
+  await page.locator('#analyse').click();
+  await expect(page.locator('#error')).toContainText('needs a positive vertical or rotational spring stiffness');
+});
+
 test('differential settlement of the middle support generates compatible reactions and BMD', async ({ page }) => {
   await openApp(page);
   await page.locator('#beamType').selectOption('simply');
