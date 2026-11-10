@@ -80,12 +80,16 @@ These are reference materials for independent verification. No third-party solve
 - **Test sources:** [anaStruct cross-check script](tests/reference_check.py), [OpenSeesPy cross-check script](tests/opensees_reference_check.py), [Playwright browser tests](tests/beam.spec.js), and [benchmark fixtures](benchmark-cases.json).
 - Independent solver comparisons are additional evidence, not certification or proof of correctness for every possible input.
 
-## Remaining verification scope
+## Verification boundaries and release status
 
-- The checks validate selected elastic beam response cases; they do not prove every possible input combination.
-- Live GitHub Pages deployment, additional mobile devices/browsers, and broader export edge cases still require separate manual checks.
-- The OpenSeesPy check compares vertical support reactions and global vertical equilibrium for all 16 fixtures, plus fixed-support reaction/end moments where fixture values are defined. It also independently compares three selected E-I deflections (simply supported point load, cantilever tip load and simply supported UDL) against closed-form values. Full diagram arrays and continuous deflection profiles have not yet been compared directly against OpenSeesPy or anaStruct.
-- The current application does not yet support triangular/trapezoidal distributed loads, externally applied concentrated couples, settlement, elastic supports, shear deformation, axial force or geometric/material nonlinearity.
+The automated suite validates representative analytical cases and user workflows; it does not prove every possible input combination or replace independent engineering review.
+
+- **Latest GitHub Actions run:** [Run 131 — successful](https://github.com/duttapranav/pranav/actions/runs/42826415640), on commit `e86e25d1bcfdb7e8febfa0e8ee853e018c8a5b8c` (10 November 2026). Both the independent-reference and browser jobs completed successfully.
+- **Independent reference solvers:** anaStruct 1.7.1 and OpenSeesPy 3.8.0.0 each passed all 16 benchmark fixtures. OpenSeesPy also passed all three selected E-I deflection benchmarks. The settlement closed-form reference checks passed.
+- **Cross-browser regression:** Playwright completed 109 tests successfully across Chromium, Firefox and WebKit; two PDF-generation tests were intentionally skipped in Firefox and WebKit because Playwright's `page.pdf()` is Chromium-only. The suite includes the independent desktop-panel scrolling regression and a narrow mobile-viewport overflow check. CSV export is checked in all three browsers; PNG export is checked in all three with browser-specific download expectations; A4 PDF rendering is checked in Chromium.
+- **Comparison limits:** OpenSeesPy independently compares support reactions and global vertical equilibrium for all 16 fixtures, with fixed-support reaction/end-moment checks where fixture values are defined, plus three selected E-I deflections. Full diagram arrays and continuous deflection profiles have not been compared directly against both reference solvers.
+- **Supported analysis scope:** the application supports uniform and linearly varying distributed loads (including triangular and trapezoidal regions), externally applied concentrated couples, prescribed vertical support settlement, and linear elastic translational and rotational support springs. It does not model shear deformation, axial-force interaction, plasticity, geometric/material nonlinearity, thermal effects, variable E/I, or nonlinear/gap/frictional support behaviour.
+- **Release boundary:** the candidate branch has passed its automated regression workflow. Live-site deployment, testing on additional physical devices, and broader manual export edge cases remain separate release activities. No merge to `main` or live deployment is performed as part of this verification.
 - The tool remains an educational and preliminary-analysis application, not a substitute for design-code checks or independent professional review.
 
 
