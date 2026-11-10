@@ -231,7 +231,7 @@ test('symmetric vertical elastic supports share a central point load equally', a
   await analyse(page);
   await expect(page.locator('#reactionTable tbody tr').nth(0)).toContainText('10');
   await expect(page.locator('#reactionTable tbody tr').nth(1)).toContainText('10');
-  await expect(page.locator('#steps')).toContainText('elastic spring stiffnesses');
+  await expect(page.locator('#steps')).toContainText('elastic translational and rotational spring stiffnesses');
 });
 
 test('elastic vertical spring displacement follows reaction divided by stiffness', async ({ page }) => {
