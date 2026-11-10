@@ -36,3 +36,10 @@ Concentrated applied moments are defined as clockwise-positive in the fixtures. 
 The support editor includes a settlement field in millimetres, with downward displacement positive and upward displacement negative. Prescribed vertical displacements are applied directly to the constrained vertical degrees of freedom; fixed supports retain zero rotation. The solver includes the prescribed-displacement terms in the reduced stiffness equations, recovers reactions from the full residual, and reports the settlement beside each support reaction.
 
 The browser suite checks differential settlement at an intermediate support in a two-span continuous beam, equal settlement at both ends (rigid-body translation), and SI display conversion. Closed-form checks are maintained separately in `settlement-cases.json` and `settlement_reference_check.py`; they cover the equal-span two-span settlement solution and uniform settlement of a simply supported beam.
+
+
+## Elastic translational and rotational supports
+
+Select **Elastic** in the support type field. Enter vertical spring stiffness (k_v), rotational spring stiffness (k_r), and (optionally) the prescribed vertical ground settlement. The vertical stiffness is displayed in kN/m (or N/mm in SI); rotational stiffness is displayed in kN·m/rad (or N·mm/rad in SI). At least one stiffness must be positive. Pin, roller and fixed supports retain their existing ideal restraint behaviour.
+
+The browser suite checks symmetric vertical spring reactions under a central point load, the expected (R/k_v) spring displacement, equal ground settlement with zero spring force, rejection of a zero-stiffness elastic support, and rotational spring moment sharing at the tip of a cantilever. The rotational-spring closed-form check uses the cantilever's free-tip rotational stiffness (EI/L), because its vertical tip degree of freedom remains free.
