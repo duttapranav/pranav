@@ -234,6 +234,46 @@ test('symmetric vertical elastic supports share a central point load equally', a
   await expect(page.locator('#steps')).toContainText('elastic spring stiffnesses');
 });
 
+test('elastic vertical spring displacement follows reaction divided by stiffness', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('simply');
+  await page.locator('#length').fill('6');
+  await page.locator('#length').press('Tab');
+  const rows = page.locator('#supports .support-row');
+  for (let i = 0; i < 2; i++) {
+    await rows.nth(i).locator('[data-k="type"]').selectOption('elastic');
+    await rows.nth(i).locator('[data-k="kv"]').fill('1000');
+    await rows.nth(i).locator('[data-k="kr"]').fill('0');
+  }
+  await clearLoads(page);
+  await addPoint(page, 20, 3);
+  await analyse(page);
+  const end = await inspectAt(page, 0);
+  const mid = await inspectAt(page, 3);
+  expect(end.deflection).toBeCloseTo(10, 2);
+  expect(mid.deflection).toBeCloseTo(10.5625, 2);
+});
+
+test('rotational spring at cantilever tip shares an applied end moment', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#beamType').selectOption('cantilever');
+  await page.locator('#length').fill('6');
+  await page.locator('#length').press('Tab');
+  await page.locator('#addSupport').click();
+  const tip = page.locator('#supports .support-row').nth(1);
+  await tip.locator('[data-k="x"]').fill('6');
+  await tip.locator('[data-k="type"]').selectOption('elastic');
+  await tip.locator('[data-k="kv"]').fill('0');
+  await tip.locator('[data-k="kr"]').fill('1000');
+  await clearLoads(page);
+  await addMoment(page, 10, 6);
+  await analyse(page);
+  // theta = M / (4EI/L + k_theta); M_spring = k_theta * theta.
+  const theta = 10 / (4 * 200000000 * 0.0008 / 6 + 1000);
+  const expectedSpringMoment = 1000 * theta;
+  await expect(page.locator('#reactionTable tbody tr').nth(1)).toContainText(expectedSpringMoment.toFixed(2));
+});
+
 test('equal settlement of two vertical elastic supports produces rigid translation', async ({ page }) => {
   await openApp(page);
   await page.locator('#beamType').selectOption('simply');
