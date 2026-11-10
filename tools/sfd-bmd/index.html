@@ -146,7 +146,21 @@ $('analyse').onclick=run;
 function svgToPng(){if(!last)throw Error('Run an analysis first.');const svgs=[...document.querySelectorAll('.plot, .beam-svg')],parts=svgs.map((svg,i)=>{const clone=svg.cloneNode(true);clone.setAttribute('xmlns','http://www.w3.org/2000/svg');return new XMLSerializer().serializeToString(clone)});return Promise.all(parts.map((src,i)=>new Promise((resolve,reject)=>{const img=new Image(),blob=new Blob([src],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob);img.onload=()=>{const c=document.createElement('canvas');c.width=1800;c.height=500;const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);c.toBlob(b=>resolve({blob:b,name:['beam','sfd','bmd','deflection'][i]+'.png'}),'image/png')};img.onerror=reject;img.src=url})))}
 $('png').onclick=async()=>{try{const imgs=await svgToPng();imgs.forEach(o=>{const a=document.createElement('a');a.href=URL.createObjectURL(o.blob);a.download=o.name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});}catch(e){alert(e.message)}};
 $('pdf').onclick=()=>{if(!last){alert('Run an analysis first.');return}window.print()};
-$('csv').onclick=()=>{if(!last){alert('Run an analysis first.');return}const lu=unit()==='si'?'mm':'m',fu=unit()==='si'?'N':'kN',mu=unit()==='si'?'Nmm':'kNm',rows=[['Position_'+lu,'Shear_'+fu,'Moment_'+mu,'Deflection_mm'],...last.samples.map(s=>[s.x*lengthFactor(),s.v*forceFactor(),s.m*(unit()==='si'?1e6:1),s.w*1000])],csv=rows.map(r=>r.join(',')).join('\n'),blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='beam-analysis-results.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+$('csv').onclick=()=>{if(!last){alert('Run an analysis first.');return}
+ const si=unit()==='si',lu=si?'mm':'m',fu=si?'N':'kN',mu=si?'N·mm':'kN·m',kvUnit=si?'N/mm':'kN/m',krUnit=si?'N·mm/rad':'kN·m/rad',lf=lengthFactor(),ff=forceFactor(),mf=momentFactor();
+ const csvCell=v=>{const x=String(v??'');return /[",\\n]/.test(x)?'"'+x.replace(/"/g,'""')+'"':x};
+ const section=(name,header,data)=>[[name],header,...data];
+ const rows=[
+ ...section('ANALYSIS SUMMARY',['Parameter','Value','Unit'],[
+ ['Beam type',last.type,''],['Beam length',last.L*lf,lu],["Young's modulus",last.elasticModulus/1e6,'GPa'],['Second moment of area',last.secondMoment,'m⁴'],['Maximum absolute shear',last.maxV*ff,fu],['Maximum sagging moment',last.maxM*mf,mu],['Maximum hogging moment',last.minM*mf,mu],['Maximum absolute deflection',last.maxDeflection*1000,'mm'],['Deflection location',last.maxDeflectionX*lf,lu],['Total applied vertical load',last.totalLoad*ff,fu],['Vertical equilibrium residual',last.forceError*ff,fu],['Moment equilibrium residual',(last.momentReactions-last.momentLoads)*mf,mu]
+ ]),
+ [''],...section('SUPPORTS',['Support','Type','Position ('+lu+')','Ground settlement (mm)','Vertical stiffness ('+kvUnit+')','Rotational stiffness ('+krUnit+')','Vertical reaction ('+fu+')','Reaction moment ('+mu+')'],last.supports.map((p,i)=>{const r=last.reactions[i];return[i+1,p.type,p.x*lf,p.settlement*1000,p.type==='elastic'?p.kv*ff/lf:'',p.type==='elastic'?p.kr*mf:'',r.vertical*ff,r.moment*mf]})),
+ [''],...section('POINT LOADS',['Load','Magnitude ('+fu+')','Position ('+lu+')'],last.points.map((p,i)=>[i+1,p.p*ff,p.x*lf])),
+ [''],...section('APPLIED MOMENTS',['Moment','Magnitude ('+mu+')','Position ('+lu+')'],last.moments.map((p,i)=>[i+1,p.m*mf,p.x*lf])),
+ [''],...section('DISTRIBUTED LOADS',['Region','Intensity at start ('+(si?'N/mm':'kN/m')+')','Intensity at end ('+(si?'N/mm':'kN/m')+')','Start ('+lu+')','End ('+lu+')'],last.udls.map((p,i)=>[i+1,p.q,p.qEnd,p.a*lf,p.b*lf])),
+ [''],...section('BEAM RESPONSE SAMPLES',['Position ('+lu+')','Shear ('+fu+')','Bending moment ('+mu+')','Deflection (mm)'],last.samples.map(p=>[p.x*lf,p.v*ff,p.m*mf,p.w*1000]))
+ ];
+ const csv='\\uFEFF'+rows.map(row=>row.map(csvCell).join(',')).join('\\r\\n'),blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='beam-analysis-results.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
 updateDefaults();labels();renderLoads();run();
 })();
 </script>
