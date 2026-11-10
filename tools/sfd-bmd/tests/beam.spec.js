@@ -610,6 +610,7 @@ test('CSV export downloads a results file after analysis', async ({ page }) => {
 test('PDF report print view includes A4 layout, model metadata and report disclaimer', async ({ page }) => {
   await openApp(page);
   await page.locator('#analyse').click();
+  await page.emulateMedia({ media: 'print' });
   await expect(page.locator('#printReport')).toBeVisible();
   await expect(page.locator('#reportMeta')).toContainText('Beam length');
   await expect(page.locator('#reportMeta')).toContainText("Young's modulus");
