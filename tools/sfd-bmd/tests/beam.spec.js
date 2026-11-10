@@ -607,6 +607,18 @@ test('CSV export downloads a results file after analysis', async ({ page }) => {
   expect(download.suggestedFilename()).toBe('beam-analysis-results.csv');
 });
 
+test('PDF report print view includes A4 layout, model metadata and report disclaimer', async ({ page }) => {
+  await openApp(page);
+  await page.locator('#analyse').click();
+  await expect(page.locator('#printReport')).toBeVisible();
+  await expect(page.locator('#reportMeta')).toContainText('Beam length');
+  await expect(page.locator('#reportMeta')).toContainText("Young's modulus");
+  const printCss = await page.locator('style').allTextContents();
+  expect(printCss.join('')).toContain('@page{size:A4');
+  expect(printCss.join('')).toContain('.print-report{display:block!important');
+  await expect(page.locator('#printReport')).toContainText('preliminary analysis');
+});
+
 test('CSV export includes elastic support properties, reactions and model summary', async ({ page }) => {
   await openApp(page);
   await page.locator('#beamType').selectOption('simply');
