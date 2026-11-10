@@ -22,14 +22,14 @@ This file records independent closed-form benchmark cases used to check the beam
 - The beam is discretised into two-node Euler–Bernoulli beam elements with vertical displacement and rotation at each node.
 - Mesh nodes are inserted at support positions, point-load positions and UDL boundaries.
 - Uniformly distributed loads are applied using consistent element load vectors.
-- Support restraints are applied to the relevant degrees of freedom, and reactions are recovered from restrained-degree-of-freedom residuals.
+- Rigid support restraints are applied to the relevant degrees of freedom. Elastic translational and rotational springs are assembled directly into the global stiffness matrix; spring reactions are recovered from their force–displacement and moment–rotation laws.
 - The SFD is recovered from vertical equilibrium; the BMD is recovered from the applied loads, support actions and concentrated-couple jumps. Applied moments enter as nodal rotational loads, leave shear continuous, and create the corresponding signed jump in the BMD.
 - Diagram sampling includes left- and right-hand values at concentrated actions so shear jumps are not hidden.
 - Maximum/minimum bending moments are checked at event locations and at zero-shear locations within each constant-load interval.
 
 ## Scope and limitations
 
-This benchmark set is a regression check, not third-party certification. The tool currently analyses vertical-plane bending of prismatic beams with linear-elastic Euler–Bernoulli behaviour. It does not replace a design-code check or independent engineering review. It does not currently model shear deformation, plasticity, geometric nonlinearity, settlement, temperature effects, axial-force interaction, or arbitrary applied point couples. Distributed loads may be uniform or vary linearly between their entered start and end intensities; curved/nonlinear load profiles are not supported.
+This benchmark set is a regression check, not third-party certification. The tool currently analyses vertical-plane bending of prismatic beams with linear-elastic Euler–Bernoulli behaviour. It does not replace a design-code check or independent engineering review. It does not currently model shear deformation, plasticity, geometric nonlinearity, thermal effects, axial-force interaction, or nonlinear/gap/frictional support behaviour. Prescribed vertical settlement and linear elastic translational/rotational support springs are supported. Distributed loads may be uniform or vary linearly between their entered start and end intensities; curved/nonlinear load profiles are not supported.
 
 ## Unit equivalence
 
@@ -163,3 +163,16 @@ The finite-element solution now partitions the stiffness system into free and pr
 | Simply supported 6 m beam | Both supports settle downward by 10 mm | Rigid-body translation; zero induced reactions and bending moment; 10 mm midspan displacement |
 
 For the two-span case, the closed-form values are R_outer = 3EIδ/L³, R_middle = −6EIδ/L³ and M_middle = 3EIδ/L², where L is the individual span and δ is the middle-support settlement. These reference values are checked separately from the browser solver. The Playwright suite additionally verifies left/right shear around the interior support, moment continuity, the settlement display, and SI-unit conversion.
+
+
+## Elastic support benchmarks — 10 November 2026
+
+The elastic support model adds vertical spring stiffness directly to the translational degree of freedom and rotational spring stiffness to the rotational degree of freedom. For a vertical spring with downward-positive beam displacement (v) and downward-positive ground settlement (v_g), the upward-positive support reaction is (R=k_v(v-v_g)). The spring contributes (k_v) to the global stiffness diagonal and (k_v v_g) to the equivalent nodal load. A rotational spring contributes (k_r) to the rotational stiffness diagonal and reports its moment from the spring moment–rotation law.
+
+| Case | Input | Expected result |
+|---|---|---|
+| Symmetric vertical springs, central point load | L = 6 m; P = 20 kN at midspan; kᵥ = 1,000 kN/m at both ends; E = 200 GPa; I = 0.0008 m⁴ | Each support reaction = 10 kN; each end settles elastically by 10 mm; midspan deflection = 10.5625 mm |
+| Equal spring-ground settlement | L = 6 m; both end springs kᵥ = 1,000 kN/m; both ground settlements = 10 mm; no applied loads | Rigid-body translation of 10 mm; zero support reactions and zero bending moment |
+| Cantilever with tip rotational spring | L = 6 m; E = 200 GPa; I = 0.0008 m⁴; kᵣ = 1,000 kN·m/rad at tip; applied tip couple = 10 kN·m | Tip rotation = M/(4EI/L + kᵣ); spring moment = kᵣ × tip rotation = approximately 0.09288 kN·m |
+
+These spring checks are included in the browser regression suite. The SI input equivalents are kᵥ in N/mm and kᵣ in N·mm/rad; 1 N/mm = 1 kN/m and 1 N·mm/rad = 10⁻⁶ kN·m/rad.
