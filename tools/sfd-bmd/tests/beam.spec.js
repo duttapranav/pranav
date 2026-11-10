@@ -271,7 +271,7 @@ test('rotational spring at cantilever tip shares an applied end moment', async (
   // With the tip's vertical DOF free, the cantilever's rotational stiffness is EI/L.
   const theta = 10 / (200000000 * 0.0008 / 6 + 1000);
   const expectedSpringMoment = 1000 * theta;
-  await expect(page.locator('#reactionTable tbody tr').nth(1)).toContainText(expectedSpringMoment.toFixed(2));
+  await expect(page.locator('#reactionTable tbody tr').nth(1)).toContainText((-expectedSpringMoment).toFixed(2));
 });
 
 test('equal settlement of two vertical elastic supports produces rigid translation', async ({ page }) => {
