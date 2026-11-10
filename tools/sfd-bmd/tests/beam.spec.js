@@ -619,10 +619,10 @@ test('desktop input and output panels scroll independently while mobile remains 
   expect(dimensions[0].scroll).toBeGreaterThan(dimensions[0].client);
   expect(dimensions[1].scroll).toBeGreaterThan(dimensions[1].client);
   expect(dimensions.every(x => ['auto', 'scroll'].includes(x.overflowY))).toBeTruthy();
-  await input.evaluate(node => { node.scrollTop = node.scrollHeight; });
+  await input.evaluate(node => { node.style.scrollBehavior = 'auto'; node.scrollTop = node.scrollHeight; });
   const inputTop = await input.evaluate(node => node.scrollTop);
   const outputTopBefore = await output.evaluate(node => node.scrollTop);
-  await output.evaluate(node => { node.scrollTop = node.scrollHeight; });
+  await output.evaluate(node => { node.style.scrollBehavior = 'auto'; node.scrollTop = node.scrollHeight; });
   const outputTop = await output.evaluate(node => node.scrollTop);
   expect(inputTop).toBeGreaterThan(0);
   expect(outputTop).toBeGreaterThan(0);
